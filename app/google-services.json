@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "510330347035",
+    "firebase_url": "https://digitalclassroom-4a01b.firebaseio.com",
+    "project_id": "digitalclassroom-4a01b",
+    "storage_bucket": "digitalclassroom-4a01b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:510330347035:android:1776288719577fc3",
+        "android_client_info": {
+          "package_name": "com.example.sahil.digitalclassroom"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "510330347035-p9acoblovvm0g3r6rrqog176i62qn9c4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sahil.digitalclassroom",
+            "certificate_hash": "eed433714f18d8668f6ad7ee08c1532e90c26fe3"
+          }
+        },
+        {
+          "client_id": "510330347035-q67ets115l5ba9ialkrt1qfqee7na5ru.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOc_dHHaa9qWPn83BApFoOFEVYrcWFY8o"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "510330347035-q67ets115l5ba9ialkrt1qfqee7na5ru.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
