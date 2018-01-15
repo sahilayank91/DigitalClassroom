@@ -18,6 +18,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.Intro_actvity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_intro_actvity"
+            android:theme="@style/FullscreenTheme"></activity>
     </application>
 
 </manifest>
