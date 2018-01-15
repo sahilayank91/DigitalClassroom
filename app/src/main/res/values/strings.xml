@@ -1,8 +1,38 @@
 <resources>
+
+    <!--Common Strings-->
     <string name="app_name">DigitalClassroom</string>
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+
+
+    <!--Parameters related to the registration page -->
+    <string name="prompt_confirm_password">Confirm Password</string>
+    <string name = "prompt_batch">Batch</string>
+    <string name = "prompt_year">Year</string>
+    <string name = "prompt_department">Department</string>
+    <string name = "prompt_college_id">ID</string>
+
+
+
+
+
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="title_activity_register">Sign Up</string>
 
     <string name="title_activity_intro_actvity">Intro_actvity</string>
 
