@@ -1,6 +1,7 @@
 package com.example.sahil.digitalclassroom.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,15 +12,27 @@ import com.example.sahil.digitalclassroom.R;
 import com.example.sahil.digitalclassroom.model.User;
 import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
-public class TakeAttendenceAdapter extends RecyclerView.Adapter<TakeAttendenceAdapter.MyViewHolder>{
 
-    private List<User> Members_of_group;
 
-    public TakeAttendenceAdapter(ArrayList<User> Members_of_group){
+public class TakeAttendanceAdapter extends RecyclerView.Adapter<TakeAttendanceAdapter.MyViewHolder>{
+
+    public  List<Boolean> ispresent_array;
+    static public Boolean[] present_array;
+    private ArrayList<User> Members_of_group;
+
+    public TakeAttendanceAdapter(ArrayList<User> Members_of_group){
         this.Members_of_group = Members_of_group;
+//        List<Boolean> list=new ArrayList<Boolean>(Arrays.asList(new Boolean[Members_of_group.size()]));
+//        Collections.fill(list, Boolean.TRUE);
+        present_array = new Boolean[Members_of_group.size()];
+        for(int i=0;i<Members_of_group.size();i++){
+            present_array[i] = false;
+        }
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -38,13 +51,13 @@ public class TakeAttendenceAdapter extends RecyclerView.Adapter<TakeAttendenceAd
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_list_take_attendence, parent, false);
+                .inflate(R.layout.item_list_take_attendance, parent, false);
 
         return new MyViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(MyViewHolder holder, final int position) {
         User user = Members_of_group.get(position);
         holder.StudentName.setText(user.getName());
         holder.StudentId.setText(user.getCollege_id());
@@ -56,7 +69,10 @@ public class TakeAttendenceAdapter extends RecyclerView.Adapter<TakeAttendenceAd
             @Override
             public void onClick(View v) {
                 boolean checked = ((CheckBox) v).isChecked();
-                ((CheckBox) v).setChecked(!checked);
+                ((CheckBox) v).setChecked(checked);
+//                Boolean a = ispresent_array.get(position);
+                present_array[position] = checked;
+                Log.e("assign", String.valueOf(present_array[position]));
             }
         });
     }
