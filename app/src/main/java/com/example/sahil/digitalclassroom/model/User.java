@@ -12,7 +12,18 @@ public class User {
 
 	private String _id;
 	private String name,email,password,college_id,phone,otp,department;
-	private int account_level;
+
+	public String getPathImage() {
+		return pathImage;
+	}
+
+	public void setPathImage(String pathImage) {
+		this.pathImage = pathImage;
+	}
+
+	private String pathImage;
+
+	private int role;
 
 	public String get_id() {
 		return _id;
@@ -78,13 +89,14 @@ public class User {
 		this.department = department;
 	}
 
-	public int getAccount_level() {
-		return account_level;
+	public int getRole() {
+		return role;
 	}
 
-	public void setAccount_level(int account_level) {
-		this.account_level = account_level;
+	public void setRole(int role) {
+		this.role = role;
 	}
+
 
 	public User(){
 
@@ -97,13 +109,14 @@ public class User {
 		if (author.has("phone")) this.phone = author.getString("phone");
 		if (author.has("email")) this.email = author.getString("email");
 		if (author.has("college_id")) this.college_id = author.getString("college_id");
-		if (author.has("account_level")) this.account_level = author.getInt("account_level");
+		if (author.has("role")) this.role = author.getInt("role");
 		if (author.has("otp")) this.otp = author.getString("otp");
+		if (author.has("pathImage"))this.pathImage = author.getString("pathImage");
 		if (author.has("department")) this.department = author.getString("department");
 	}
 
 	/*Sending data to the database*/
-	public User(String email, String name, String password,String phone,String otp,String department,String _id,String college_id,int account_level){
+	public User(String email, String name, String password,String phone,String otp,String department,String _id,String college_id,int role,String pathImage){
 		this.email = email;
 		this._id = _id;
 		this.name = name;
@@ -112,7 +125,8 @@ public class User {
 		this.otp = otp;
 		this.department = department;
 		this.college_id = college_id;
-		this.account_level = account_level;
+		this.role = role;
+		this.pathImage = pathImage;
 
 	}
 	@Override
@@ -132,8 +146,9 @@ public class User {
 			users.put("phone",this.phone);
 			users.put("otp",this.otp);
 			users.put("college_id",this.college_id);
-			users.put("account_level", String.valueOf(this.account_level));
+			users.put("role", String.valueOf(this.role));
 			users.put("department",this.department);
+			users.put("pathImage",this.pathImage);
 			return users;
 	}
 
