@@ -11,8 +11,27 @@ import java.util.HashMap;
 public class User {
 
 	private String _id;
-	private String name,email,password,college_id,phone,otp,department;
-	private int account_level;
+	private String name,email,password,college_id,phone,department;
+
+    public int getRole() {
+        return role;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
+    }
+
+    private int role;
+
+	public String getProfile_url() {
+		return profile_url;
+	}
+
+	public void setProfile_url(String profile_url) {
+		this.profile_url = profile_url;
+	}
+
+	private String profile_url;
 
 	public String get_id() {
 		return _id;
@@ -62,13 +81,6 @@ public class User {
 		this.phone = phone;
 	}
 
-	public String getOtp() {
-		return otp;
-	}
-
-	public void setOtp(String otp) {
-		this.otp = otp;
-	}
 
 	public String getDepartment() {
 		return department;
@@ -78,13 +90,6 @@ public class User {
 		this.department = department;
 	}
 
-	public int getAccount_level() {
-		return account_level;
-	}
-
-	public void setAccount_level(int account_level) {
-		this.account_level = account_level;
-	}
 
 	public User(){
 
@@ -97,24 +102,47 @@ public class User {
 		if (author.has("phone")) this.phone = author.getString("phone");
 		if (author.has("email")) this.email = author.getString("email");
 		if (author.has("college_id")) this.college_id = author.getString("college_id");
-		if (author.has("account_level")) this.account_level = author.getInt("account_level");
-		if (author.has("otp")) this.otp = author.getString("otp");
 		if (author.has("department")) this.department = author.getString("department");
+		if (author.has("profile_url")) this.department = author.getString("profile_url");
+
 	}
 
 	/*Sending data to the database*/
-	public User(String email, String name, String password,String phone,String otp,String department,String _id,String college_id,int account_level){
+	public User(String email, String name, String password,String phone,String department,String _id,String college_id,String profile_url, int role){
 		this.email = email;
 		this._id = _id;
+		this.role = role;
 		this.name = name;
 		this.password = password;
 		this.phone = phone;
-		this.otp = otp;
 		this.department = department;
 		this.college_id = college_id;
-		this.account_level = account_level;
+		this.profile_url = profile_url;
 
 	}
+    public User(String email, String name, String password,String phone,String department,String _id,String college_id){
+        this.email = email;
+        this._id = _id;
+        this.name = name;
+        this.password = password;
+        this.phone = phone;
+        this.department = department;
+        this.college_id = college_id;
+
+
+    }
+    public User(String email, String name, String password,String phone,String department,String _id,String college_id, int role){
+        this.email = email;
+        this._id = _id;
+        this.name = name;
+        this.password = password;
+        this.phone = phone;
+        this.department = department;
+        this.college_id = college_id;
+        this.role = role;
+
+
+    }
 	@Override
 	public boolean equals(Object obj) {
 		User user=(User)obj;
@@ -122,20 +150,5 @@ public class User {
 			return true;
 		else return false;
 	}
-
-	public HashMap<String, String > getMap(){
-		HashMap<String, String> users = new HashMap<>();
-			users.put("_id",this._id);
-			users.put("email",this.email);
-			users.put("password",this.password);
-			users.put("name",this.name);
-			users.put("phone",this.phone);
-			users.put("otp",this.otp);
-			users.put("college_id",this.college_id);
-			users.put("account_level", String.valueOf(this.account_level));
-			users.put("department",this.department);
-			return users;
-	}
-
 
 }

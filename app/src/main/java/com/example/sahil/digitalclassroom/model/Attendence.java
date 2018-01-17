@@ -19,14 +19,5 @@ public class Attendence {
         this.is_present = is_present;
     }
 
-    public HashMap getMap(){
-        HashMap<String, String> attendence = new HashMap<>();
-        attendence.put("taken_by",this.taken_by);
-        attendence.put("group_id",this.group_id);
-        attendence.put("user_id",this.user_id);
-        attendence.put("is_present", String.valueOf(is_present));
-        attendence.put("date", String.valueOf(date));
-        return attendence;
-    }
 
 }

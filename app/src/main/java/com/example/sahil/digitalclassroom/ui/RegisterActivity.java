@@ -3,7 +3,9 @@ package com.example.sahil.digitalclassroom.ui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -25,10 +27,12 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,7 +54,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class RegisterActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class RegisterActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>, AdapterView.OnItemSelectedListener {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -70,13 +74,19 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     private UserLoginTask mAuthTask = null;
 
     // UI references.
+
+    public static final String MyPREFERENCES = "MyPrefs" ;
+    private SharedPreferences sharedPreferences;
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private EditText mConfirmPasswordView;
-    private EditText mBatchView;
     private EditText mYearView;
     private EditText mDepartmentView;
     private EditText mId;
+    private EditText mPhone;
+    private EditText mName;
+    private Spinner spinner;
+    private String role;
     private FirebaseAuth mAuth;
     private View mProgressView;
     private View mLoginFormView;
@@ -101,11 +111,13 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             }
         });
 
-        mBatchView = (EditText)findViewById(R.id.batch);
         mYearView = (EditText)findViewById(R.id.year);
         mConfirmPasswordView = (EditText) findViewById(R.id.confirmPassword);
         mDepartmentView = (EditText) findViewById(R.id.department);
         mId = (EditText)findViewById(R.id.collegeid);
+        mPhone = (EditText) findViewById(R.id.phone);
+        mName = (EditText)findViewById(R.id.username);
+
 
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
@@ -119,7 +131,24 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
+         spinner = (Spinner) findViewById(R.id.role);
 
+        // Spinner click listener
+        spinner.setOnItemSelectedListener(this);
+
+        // Spinner Drop down elements
+        List<String> categories = new ArrayList<String>();
+        categories.add("Teacher");
+        categories.add("Student");
+
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        spinner.setAdapter(dataAdapter);
     }
 
     private void populateAutoComplete() {
@@ -187,7 +216,14 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         String year = mYearView.getText().toString();
         String collegeid = mId.getText().toString();
         String confirm = mConfirmPasswordView.getText().toString();
-
+        String phone = mPhone.getText().toString();
+        String username = mName.getText().toString();
+        Integer myRole;
+        if(role=="Teacher"){
+            myRole = 1;
+        }else{
+            myRole = 0;
+        }
 
         boolean cancel = false;
         View focusView = null;
@@ -223,7 +259,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password,department,year,collegeid);
+            mAuthTask = new UserLoginTask(username,email, password,department,year,collegeid,phone,myRole);
             mAuthTask.execute((Void) null);
         }
     }
@@ -317,6 +353,16 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         mEmailView.setAdapter(adapter);
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+       role = parent.getItemAtPosition(position).toString();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+            Toast.makeText(RegisterActivity.this,"Please Select the Role",Toast.LENGTH_SHORT);
+    }
+
 
     private interface ProfileQuery {
         String[] PROJECTION = {
@@ -339,13 +385,19 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         private final String mDepartment;
         private final String mYear;
         private final String mCollegeId;
+        private final String mPhone;
+        private final String mUsername;
+        private final Integer mRole;
 
-        UserLoginTask(String email, String password, String department, String year, String collegeId) {
+        UserLoginTask(String username,String email, String password, String department, String year, String collegeId, String phone,int role) {
             mEmail = email;
             mPassword = password;
             mDepartment = department;
             mYear = year;
             mCollegeId = collegeId;
+            mPhone = phone;
+            mUsername = username;
+            mRole =role;
         }
 
         @Override
@@ -362,6 +414,37 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d("Registration Portal:", "createUserWithEmail:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
+                                    sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+
+
+                                    /*Getting firebase Database configuration*/
+                                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+                                    /*User Reference*/
+                                    DatabaseReference ref = database.getReference("/users");
+
+                                    DatabaseReference newUserRef = ref.push();
+
+                                    String userId = newUserRef.getKey();
+                                    User userdata = new User(mEmail,mUsername,mPassword,mPhone,mDepartment,userId,mCollegeId,mRole);
+
+
+                                    /*Setting the user value in the database*/
+                                    newUserRef.setValue(userdata);
+
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                                    editor.putString("user_auth_id",user.getUid());
+                                    editor.putString("userId",userId);
+                                    editor.putString("username",mUsername);
+                                    editor.putString("password",mPassword);
+                                    editor.putString("department",mDepartment);
+                                    editor.putString("year",mYear);
+                                    editor.putInt("role",mRole);
+                                    editor.putString("email",user.getEmail());
+                                    editor.commit();
+
+
                                     Intent intent = new Intent (RegisterActivity.this, MainActivity.class);
                                     startActivity(intent);
 
