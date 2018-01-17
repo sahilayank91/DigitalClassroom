@@ -21,7 +21,7 @@ import java.util.List;
 
 public class TakeAttendanceAdapter extends RecyclerView.Adapter<TakeAttendanceAdapter.MyViewHolder>{
 
-    public  List<Boolean> ispresent_array;
+//    public  List<Boolean> ispresent_array;
     static public Boolean[] present_array;
     private ArrayList<User> Members_of_group;
 

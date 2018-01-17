@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 
 public class AnalyseAttendanceAdapter extends RecyclerView.Adapter<AnalyseAttendanceAdapter.MyViewHolder>{
-    //make list of user with percentage
+    //make list of user with percentage this is extended user model
     private ArrayList<User> Members_of_group;
 
     public AnalyseAttendanceAdapter(ArrayList<User> Members_of_group){
