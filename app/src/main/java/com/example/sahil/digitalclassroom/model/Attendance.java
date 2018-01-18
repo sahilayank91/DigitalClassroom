@@ -6,8 +6,19 @@ import java.util.HashMap;
 
 public class Attendance {
     private String taken_by,group_id,user_id;
-    private long date;
+    private String date;
     private boolean is_present;
+    private String groupid_date;
+
+    public String getGroupid_date() {
+        return groupid_date;
+    }
+
+    public void setGroupid_date(String groupid_date) {
+        this.groupid_date = groupid_date;
+    }
+
+
 
     public String getTaken_by() {
         return taken_by;
@@ -33,11 +44,11 @@ public class Attendance {
         this.user_id = user_id;
     }
 
-    public long getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(long date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -51,7 +62,7 @@ public class Attendance {
 
     public Attendance(){
     }
-    public Attendance(String taken_by, String group_id, String user_id, long date, boolean is_present){
+    public Attendance(String taken_by, String group_id, String user_id, String date, boolean is_present){
         this.taken_by = taken_by;
         this.group_id = group_id;
         this.user_id = user_id;

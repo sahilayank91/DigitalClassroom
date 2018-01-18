@@ -1,5 +1,6 @@
 package com.example.sahil.digitalclassroom.ui;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -21,7 +22,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import static com.example.sahil.digitalclassroom.adapter.TakeAttendanceAdapter.present_array;
@@ -41,8 +44,17 @@ public class TakeAttendance extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_take_attendance);
 
+        //Get the members list,Groupid,Teacher id in intent
+        Group_id = "-L34ztQ9YP2avt0NyxDU";
+        Teacher_id = "-L34I6uEd2FljjwWSI5G";
+//aListModel = (ArrayList<Model>) getIntent().getSerializableExtra(KEY); //model class must implement serializable
+//        Members = getIntent().getStringArrayListExtra("Members");
+//        Group_id = getIntent().getStringExtra("group_id");
+//        Teacher_id = getIntent().getStringExtra("teacher_id");
+
+
         Members = PopulateSample();//for populating sample data
-        //todo take the members of group and populate the list Members
+        //todo make introduction thing in the activity
         submitButton = (Button) findViewById(R.id.submit_attendance);
 
         recyclerView = (RecyclerView) findViewById(R.id.list_attendance);
@@ -57,10 +69,11 @@ public class TakeAttendance extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 createAttendance(Members);
+                finish();
             }
         });
     }
-
+//Populate sample data
     public ArrayList<User> PopulateSample(){
         ArrayList<User> Members = new ArrayList<>();
         User user = new User("hello@gmail.com","hel1","00","ph","otp","department","id1","collegeid",2,"helo");
@@ -73,14 +86,20 @@ public class TakeAttendance extends AppCompatActivity {
     public void createAttendance(ArrayList<User> Members){
         Attendance submitAttendance;
         submitAttendance = new Attendance();
-        submitAttendance.setGroup_id("iiitk cse 3rd year compiler");
-        submitAttendance.setTaken_by("teacher_id");
-        long time = System.currentTimeMillis();
-        submitAttendance.setDate(time);
+        submitAttendance.setGroup_id(Group_id);
+        submitAttendance.setTaken_by(Teacher_id);
+        //To get current date and time of system
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+        String formattedDate = df.format(c.getTime());
+        submitAttendance.setDate(formattedDate);
+
+        submitAttendance.setGroupid_date(submitAttendance.getGroup_id()+"_"+submitAttendance.getDate());
+
         for (int i=0; i<Members.size();i++){
             submitAttendance.setUser_id(Members.get(i).get_id());
             submitAttendance.setIs_present(present_array[i]);
-
+            //Storing in firebase
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference myRef = database.getReference("/attendance");
             DatabaseReference newref = myRef.push();
