@@ -20,9 +20,16 @@ import java.util.ArrayList;
 public class AnalyseAttendanceAdapter extends RecyclerView.Adapter<AnalyseAttendanceAdapter.MyViewHolder>{
     //make list of user with percentage this is extended user model
     private ArrayList<User> Members_of_group;
+    private int[] percentage_array;
 
-    public AnalyseAttendanceAdapter(ArrayList<User> Members_of_group){
+    public AnalyseAttendanceAdapter(ArrayList<User> Members_of_group,int[] present_array,int[] total_array){
         this.Members_of_group = Members_of_group;
+        //To calculate the % on the basis of present and total
+        int[] percentage_array = new int[present_array.length];
+        for (int i=0;i<present_array.length;i++){
+            percentage_array[i] = present_array[i]*100/total_array[i];
+        }
+        this.percentage_array =percentage_array;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -34,7 +41,7 @@ public class AnalyseAttendanceAdapter extends RecyclerView.Adapter<AnalyseAttend
             StudentName = (TextView) view.findViewById(R.id.list_student_name);
             StudentId = (TextView) view.findViewById(R.id.list_student_id);
             StudentImage = (ImageView) view.findViewById(R.id.list_student_avatar);
-            StudentPercentage = (CheckBox) view.findViewById(R.id.text_percentage);
+            StudentPercentage = (TextView) view.findViewById(R.id.text_percentage);
         }
     }
 
@@ -55,9 +62,9 @@ public class AnalyseAttendanceAdapter extends RecyclerView.Adapter<AnalyseAttend
                 .load(user.getPathImage())//Set the path of the image
                 .into(holder.StudentImage);
 
-//        holder.StudentPercentage.setText(String.valueof(user.percentage)+"%");
+        holder.StudentPercentage.setText(String.valueOf(percentage_array[position])+"%");
         //For color text in attendance
-        if (90<75){
+        if (percentage_array[position]<75){
             holder.StudentPercentage.setTextColor(Color.parseColor("#C62828"));
         }
         else{

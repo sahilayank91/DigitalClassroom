@@ -47,8 +47,6 @@ public class TakeAttendance extends AppCompatActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.list_attendance);
 
-
-
         mAdapter = new TakeAttendanceAdapter(Members);//Provide Members List
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(mLayoutManager);
