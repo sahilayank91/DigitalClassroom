@@ -6,17 +6,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.sahil.digitalclassroom.R;
 import com.example.sahil.digitalclassroom.model.Assignment;
-import com.example.sahil.digitalclassroom.model.User;
 import com.example.sahil.digitalclassroom.ui.AssignmentActivity;
 import com.example.sahil.digitalclassroom.ui.AssignmentCreateActivity;
-import com.squareup.picasso.Picasso;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -82,12 +79,11 @@ public class AssignmentListAdapter extends RecyclerView.Adapter<AssignmentListAd
         holder.assignmentDueDate.setText(DateFormat.getDateInstance(SimpleDateFormat.MEDIUM).format(calendar.getTime()));
 
         if(isBehindCurrentDate(calendar)) {
-            
+
             holder.assignmentDueDate.setTextColor(Color.parseColor("#C62828"));
         }
         else{
             holder.assignmentDueDate.setTextColor(Color.parseColor("#2E7D32"));
-            holder.
         }
 
         holder.assignmentMarks.setText(assignment.getMarks() + " Marks");

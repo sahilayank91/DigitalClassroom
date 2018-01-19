@@ -8,6 +8,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -40,8 +41,9 @@ public class AssignmentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assignment);
-       // AssignmentList = PopulateSample();//for populating sample data
 
+        AssignmentList = new ArrayList();
+        getDataIntoAssignmentList();
         recyclerView = (RecyclerView) findViewById(R.id.recycler_assignment);
 
         mAdapter = new AssignmentListAdapter(AssignmentList);//Provide Members List
@@ -89,15 +91,16 @@ public class AssignmentActivity extends AppCompatActivity {
         return Members;
     }
 
-    public void call(){
+    public void getDataIntoAssignmentList(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        Query query = reference.child("assignment");
+        Query query = reference.child("assignments");
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Assignment assignment = dataSnapshot.getValue(Assignment.class);
                 if(assignment != null)
                 {
+                    Log.d("hjkk","dasd");
                     AssignmentList.add(assignment);
                     mAdapter.notifyDataSetChanged();
                 }
