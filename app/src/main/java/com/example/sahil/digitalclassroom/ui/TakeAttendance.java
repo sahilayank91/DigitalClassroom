@@ -97,7 +97,6 @@ public class TakeAttendance extends AppCompatActivity {
             DatabaseReference myRef = database.getReference("/attendance");
             DatabaseReference newref = myRef.push();
             newref.setValue(submitAttendance);
-
         }
     }
 }

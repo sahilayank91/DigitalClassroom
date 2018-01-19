@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -40,7 +39,8 @@ public class AnalyseAttendance extends AppCompatActivity implements DatePickerDi
     private AnalyseAttendanceAdapter mAdapter;
     public RecyclerView.LayoutManager mLayoutManager;
     boolean[] present_array;
-
+    private int role;//0 for student and 1 for teacher
+    private String User_id,Group_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,22 +49,33 @@ public class AnalyseAttendance extends AppCompatActivity implements DatePickerDi
         DateButton = (Button) findViewById(R.id.button_date_analyse);
         //Below functions to pick the date accordingly
         Calendar c = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
-        DateData = df.format(c.getTime());
-        DateButton.setText("Date : "+DateData);
+        DateButton.setText("Date : " + DateFormat.getDateInstance(SimpleDateFormat.MEDIUM).format(c.getTime()));
 
         DateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DialogFragment datePicker = new DatePickerFragmentTo();
                 datePicker.show(getSupportFragmentManager(), "date picker");
-                Log.e("reading", "inside click listener");
-                Log.e("reading", DateData+" ");
             }
         });
+        role = 1;
 
+//        Group_id = getIntent().getStringExtra("group_id");
+//        User_id = getIntent().getStringExtra("teacher_id");
+        Group_id = "-L34ztQ9YP2avt0NyxDU";
+
+        //Below things are based on teacher role now
         listOfatt = new ArrayList<>();
-        MembersOfGroup = PopulateSample();
+        //Get member list
+        if (role==0) {
+            MembersOfGroup = new ArrayList<>();//This will only contain one user in case of student
+            User user = new User("hello@gmail.com", "hel1", "00", "ph", "otp", "department", "id2", "collegeid", 2, "helo");
+            MembersOfGroup.add(user);
+        }
+        else{
+            MembersOfGroup = PopulateSample();
+        }
+
         present_array = new boolean[MembersOfGroup.size()];
         recyclerView = (RecyclerView) findViewById(R.id.list_analyse_attendance);
         mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -96,13 +107,12 @@ public class AnalyseAttendance extends AppCompatActivity implements DatePickerDi
                 }
             }
         }
-
     }
 
 //Fucntion to query data from firebase
     public void ExecuteFirebase(){
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        Query query = reference.child("attendance").orderByChild("groupid_date").equalTo("-L34ztQ9YP2avt0NyxDU_"+DateData);
+        Query query = reference.child("attendance").orderByChild("groupid_date").equalTo(Group_id+"_"+DateData);
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
@@ -136,18 +146,57 @@ public class AnalyseAttendance extends AppCompatActivity implements DatePickerDi
         });
     }
 
-    //To set the date
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        String From_button_text = "Date : " + DateFormat.getDateInstance(SimpleDateFormat.MEDIUM).format(calendar.getTime());
-        DateButton.setText(From_button_text);
+        DateButton.setText("Date : " + DateFormat.getDateInstance(SimpleDateFormat.MEDIUM).format(calendar.getTime()));
         SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
         DateData = df.format(calendar.getTime());
-        ExecuteFirebase();
+        if (role == 1) {
+            ExecuteFirebase();
+        }
+        else{
+        ExecuteFirebaseStudent();}
+    }
+
+    private void ExecuteFirebaseStudent() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        Query query = reference.child("attendance").orderByChild("groupid_date").equalTo(Group_id+"_"+DateData);
+        query.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Attendance attendance = dataSnapshot.getValue(Attendance.class);
+                User x;
+                x = MembersOfGroup.get(0);
+                if (attendance != null && attendance.getUser_id().contains(x.get_id()) ) {
+                    present_array[0] = attendance.isIs_present();
+                    mAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError firebaseError) {
+
+            }
+        });
     }
 
     //Two fragment of date picker for picking date 
