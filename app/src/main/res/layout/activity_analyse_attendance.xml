@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -18,54 +16,40 @@
             android:layout_marginTop="10dp"
             android:layout_centerHorizontal="true"
             android:gravity="center_horizontal"
-            android:text="Enter the dates to analyse the data"
+            android:text="Enter date to see Student attendance"
             android:textColor="#000"
             android:textSize="20sp" />
 
         <Button
-            android:id="@+id/button_from_date"
+            android:id="@+id/button_date_analyse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
             android:layout_below="@+id/info_text"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="12dp"
-            android:text="From : 1 JAN 2018"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
             android:backgroundTint="@color/color_button"
-            android:layout_marginStart="20dp" />
+            android:text="Date : 1 JAN 2018" />
 
-        <Button
-            android:id="@+id/button_to_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/button_from_date"
-            android:layout_marginRight="20dp"
-            android:text="To : 1 JAN 2018"
-            android:backgroundTint="@color/color_button"
-            />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="3dp"
+            android:layout_height="2dp"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:layout_alignTop="@+id/button_from_date"
-            android:layout_marginTop="68dp"
-            android:backgroundTint="@android:color/darker_gray" />
+            android:layout_below="@+id/button_date_analyse"
+            android:layout_marginTop="14dp"
+            android:backgroundTint="@color/dark_grey"
+            android:id="@+id/view" />
 
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/list_analyse_attendance"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/button_from_date"
-        android:layout_marginTop="28dp"
-        android:scrollbars="vertical" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/list_analyse_attendance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/view"
+            android:layout_marginTop="10dp"
+            android:scrollbars="vertical" />
     </RelativeLayout>
 
 </android.support.v4.widget.NestedScrollView>

@@ -12,11 +12,12 @@
         android:layout_width="@dimen/avator_size"
         android:layout_height="@dimen/avator_size"
         android:scaleType="centerCrop"
-        tools:src="@drawable/splash" />
+        android:src="@drawable/splash"
+        />
 
     <TextView
         android:id="@+id/list_student_name"
-        android:layout_width="200dp"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/md_keylines"
         android:layout_toRightOf="@+id/list_student_avatar"
@@ -26,7 +27,7 @@
 
     <TextView
         android:id="@+id/list_student_id"
-        android:layout_width="200dp"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/list_student_name"
         android:layout_marginLeft="@dimen/md_keylines"
@@ -43,11 +44,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="19dp"
-        android:layout_marginStart="19dp"
+        android:layout_marginLeft="11dp"
+        android:layout_marginStart="11dp"
         android:layout_toEndOf="@+id/list_student_name"
         android:layout_toRightOf="@+id/list_student_name"
-        android:text="70%"
+        android:text="Present"
         android:textColor="#2E7D32"
         android:textSize="25sp"
         android:textStyle="bold" />

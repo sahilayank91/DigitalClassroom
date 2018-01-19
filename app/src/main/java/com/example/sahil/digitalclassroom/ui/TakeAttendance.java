@@ -1,12 +1,11 @@
 package com.example.sahil.digitalclassroom.ui;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -14,18 +13,12 @@ import com.example.sahil.digitalclassroom.R;
 import com.example.sahil.digitalclassroom.adapter.TakeAttendanceAdapter;
 import com.example.sahil.digitalclassroom.model.Attendance;
 import com.example.sahil.digitalclassroom.model.User;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import static com.example.sahil.digitalclassroom.adapter.TakeAttendanceAdapter.present_array;
 
@@ -52,7 +45,6 @@ public class TakeAttendance extends AppCompatActivity {
 //        Group_id = getIntent().getStringExtra("group_id");
 //        Teacher_id = getIntent().getStringExtra("teacher_id");
 
-
         Members = PopulateSample();//for populating sample data
         //todo make introduction thing in the activity
         submitButton = (Button) findViewById(R.id.submit_attendance);
@@ -69,6 +61,8 @@ public class TakeAttendance extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 createAttendance(Members);
+                Intent intent = new Intent(getApplicationContext(),AnalyseAttendance.class);
+                startActivity(intent);
                 finish();
             }
         });
@@ -99,7 +93,6 @@ public class TakeAttendance extends AppCompatActivity {
         for (int i=0; i<Members.size();i++){
             submitAttendance.setUser_id(Members.get(i).get_id());
             submitAttendance.setIs_present(present_array[i]);
-            //Storing in firebase
             FirebaseDatabase database = FirebaseDatabase.getInstance();
             DatabaseReference myRef = database.getReference("/attendance");
             DatabaseReference newref = myRef.push();
