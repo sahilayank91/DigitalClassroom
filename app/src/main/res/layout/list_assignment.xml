@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="15px"
+    android:padding="@dimen/activity_vertical_margin">
+    <RelativeLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+        <TextView
+            android:id="@+id/assignmentListName"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:textSize="20dp"
+            android:text="Assignment Name"
+            android:layout_marginLeft="@dimen/activity_vertical_margin"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp">
+        </TextView>
+        <TextView
+            android:id="@+id/assignmentListDueDateText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/assignmentListName"
+            android:text="Due Date:"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginBottom="5dp"/>
+        <TextView
+            android:id="@+id/assignmentListDueDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/assignmentListDueDateText"
+            android:layout_alignBottom="@id/assignmentListDueDateText"
+            android:layout_marginLeft="5dp"
+            android:text="14 jan 2015">
+        </TextView>
+        <TextView
+            android:id="@+id/assignmentListMarks"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="20 Marks"
+            android:layout_alignBottom="@id/assignmentListDueDateText"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/activity_horizontal_margin">
+        </TextView>
+        <ImageButton
+            android:id="@+id/assignmentUpload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/ic_menu_upload"
+            android:layout_below="@id/assignmentListMarks"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true">
+        </ImageButton>
+        <ImageButton
+            android:id="@+id/assignmentDownload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@android:drawable/arrow_down_float"
+            android:layout_below="@id/assignmentListDueDate"
+            android:padding="@dimen/activity_horizontal_margin">
+        </ImageButton>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
