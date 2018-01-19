@@ -3,10 +3,13 @@ package com.example.sahil.digitalclassroom.ui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -32,22 +35,31 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.example.sahil.digitalclassroom.R;
 import com.example.sahil.digitalclassroom.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -79,6 +91,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     private SharedPreferences sharedPreferences;
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
+    private Uri filePath;
     private EditText mConfirmPasswordView;
     private EditText mYearView;
     private EditText mDepartmentView;
@@ -90,6 +103,13 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     private FirebaseAuth mAuth;
     private View mProgressView;
     private View mLoginFormView;
+    private ImageView profile_image;
+    private final int PICK_IMAGE_REQUEST = 71;
+    private Uri downloadUrl;
+    private String image_url;
+    private String file_url;
+    FirebaseStorage storage;
+    StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +119,10 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
         mAuth = FirebaseAuth.getInstance();
+        storageReference = storage.getReference();
+
         mPasswordView = (EditText) findViewById(R.id.password);
+        profile_image  = (ImageView)findViewById(R.id.imageView);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -108,6 +131,14 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                     return true;
                 }
                 return false;
+            }
+        });
+
+
+        profile_image.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseImage();
             }
         });
 
@@ -150,7 +181,72 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         // attaching data adapter to spinner
         spinner.setAdapter(dataAdapter);
     }
+    private void chooseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null) {
+            filePath = data.getData();
+            uploadFile();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                profile_image.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    private void uploadFile() {
+
+        if(filePath != null) {
+            final ProgressDialog progressDialog;
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+            String path = "";
+
+
+                path = "images/" + UUID.randomUUID().toString();
+
+
+            StorageReference ref = storageReference.child(path);
+            ref.putFile(filePath)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            progressDialog.dismiss();
+
+                            downloadUrl = taskSnapshot.getMetadata().getDownloadUrl();
+                            image_url = downloadUrl.toString();
+
+                            Toast.makeText(RegisterActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(RegisterActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
+                                    .getTotalByteCount());
+                            progressDialog.setMessage("Uploaded " + (int) progress + "%");
+                        }
+                    });
+
+        }
+    }
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
             return;
@@ -414,7 +510,10 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d("Registration Portal:", "createUserWithEmail:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
+                                    String user_auth_id = user.getUid();
+
                                     sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+
 
 
                                     /*Getting firebase Database configuration*/
@@ -426,7 +525,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                                     DatabaseReference newUserRef = ref.push();
 
                                     String userId = newUserRef.getKey();
-                                    User userdata = new User(mEmail,mUsername,mPassword,mPhone,mDepartment,userId,mCollegeId,mRole);
+                                    User userdata = new User(mEmail,mUsername,mPassword,mPhone,mDepartment,userId,mCollegeId,mRole,user_auth_id,image_url);
 
 
                                     /*Setting the user value in the database*/
@@ -434,7 +533,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
 
                                     SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                                    editor.putString("user_auth_id",user.getUid());
+                                    editor.putString("user_auth_id",user_auth_id);
                                     editor.putString("userId",userId);
                                     editor.putString("username",mUsername);
                                     editor.putString("password",mPassword);
@@ -451,7 +550,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w("Registration Portal:", "createUserWithEmail:failure", task.getException());
-                                    Toast.makeText(RegisterActivity.this, "Authentication failed.",
+                                    Toast.makeText(RegisterActivity.this, "Authentication failed." + task.getException(),
                                             Toast.LENGTH_SHORT).show();
 
                                 }

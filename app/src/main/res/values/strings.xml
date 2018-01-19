@@ -39,8 +39,14 @@
 
     <string name="title_activity_intro_actvity">Intro_actvity</string>
 
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
     <!--This is the intro string for the intro activity I will edit it later-->
     <string name="intro_string">In this app you can do following things : </string>
     <string name="title_activity_create_post">CreatePostActivity</string>
     <string name="title_activity_createpost">CreatepostActivity</string>
+    <string name="title_activity_create_group">CreateGroupActivity</string>
+    <string name="title_activity_dash_board">DashBoardActivity</string>
 </resources>

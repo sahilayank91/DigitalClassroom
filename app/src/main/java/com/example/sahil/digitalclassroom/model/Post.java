@@ -13,8 +13,25 @@ import java.util.Date;
 
 public class Post {
     private String post_id;
+    public String getUsername() {
+        return username;
+    }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
+    private String username;
+
+    public String getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(String department) {
+        this.department = department;
+    }
+
+    private String department;
     private String userId;
     private String group_id;
     public ArrayList<String> getFile() {
@@ -25,20 +42,30 @@ public class Post {
     }
     private ArrayList<String> file;
 
-    public Uri getImage_url() {
+    public String getImage_url() {
         return image_url;
     }
 
-    public void setImage_url(Uri image_url) {
+    public void setImage_url(String image_url) {
         this.image_url = image_url;
     }
 
-    private Uri image_url;
+    private String image_url;
     private String text;
     private Long time;
 
+    public String getFile_url() {
+        return file_url;
+    }
 
-    public Post(String post_id,String group_id,String userId, Long time, Uri image_url, String text){
+    public void setFile_url(String file_url) {
+        this.file_url = file_url;
+    }
+
+    private String file_url;
+
+
+    public Post(String post_id,String group_id,String userId, Long time, String image_url, String text){
         this.post_id = post_id;
         this.group_id = group_id;
         this.userId = userId;
@@ -47,13 +74,28 @@ public class Post {
         this.text= text;
     }
 
+public Post(){
 
-    public Post(String post_id,String userId, Long time, Uri image_url, String text){
+}
+    public Post(String post_id,String userId, Long time,String text, String image_url, String file_url){
         this.post_id = post_id;
         this.userId = userId;
         this.time = time;
         this.image_url = image_url;
         this.text= text;
+        this.file_url = file_url;
+    }
+
+    public Post(String post_id,String userId, Long time,String text, String image_url, String file_url, String username,String department,String group_id){
+        this.post_id = post_id;
+        this.userId = userId;
+        this.time = time;
+        this.image_url = image_url;
+        this.text= text;
+        this.file_url = file_url;
+        this.username = username;
+        this.department = department;
+        this.group_id = group_id;
     }
 
     public Post(String post_id,String userId, Long time, String text){
@@ -63,7 +105,7 @@ public class Post {
         this.text= text;
     }
 
-    public Post(String post_id,Long time, String text, Uri image_url){
+    public Post(String post_id,Long time, String text, String image_url){
         this.post_id = post_id;
         this.time = time;
         this.text= text;

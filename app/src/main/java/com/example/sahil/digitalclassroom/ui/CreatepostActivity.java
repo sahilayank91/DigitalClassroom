@@ -1,22 +1,27 @@
 package com.example.sahil.digitalclassroom.ui;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.sahil.digitalclassroom.R;
@@ -31,6 +36,7 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -40,7 +46,10 @@ public class CreatepostActivity extends AppCompatActivity {
     private ImageView imageView;
     private Button submit;
     private EditText text;
+    private Context context;
     private Uri downloadUrl;
+    private String image_url;
+    private String file_url;
     FirebaseStorage storage;
     StorageReference storageReference;
     private final int PICK_IMAGE_REQUEST = 71;
@@ -48,10 +57,17 @@ public class CreatepostActivity extends AppCompatActivity {
     public static final String MyPREFERENCES = "MyPrefs" ;
     private SharedPreferences sharedPreferences;
     private CardView addFile;
+    private TextView fileList ;
     private int flag = 0;
+    private String group_id;
+    private String fileName;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        group_id = getIntent().getStringExtra("group_id");
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
         setContentView(R.layout.activity_createpost);
@@ -59,7 +75,7 @@ public class CreatepostActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         imageView = (ImageView) findViewById(R.id.image);
         addFile = (CardView)findViewById(R.id.addFile);
-
+        fileList = (TextView)findViewById(R.id.fileList);
         addFile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,29 +102,7 @@ public class CreatepostActivity extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadImage();
-
-                String userText = text.getText().toString();
-
-//               String userId = sharedPreferences.getString("userId","");
-                long time= System.currentTimeMillis();
-
-  /*Getting firebase Database configuration*/
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-
-                                    /*User Reference*/
-                DatabaseReference ref = database.getReference("/posts");
-
-                DatabaseReference newPostRef = ref.push();
-
-                String post_id = newPostRef.getKey();
-
-
-               /*Uploading the Post Data to the Database*/
-                Post post = new Post(post_id,time,userText,downloadUrl);
-                newPostRef.setValue(post);
-
-
+                uploadPost();
             }
         });
     }
@@ -135,6 +129,7 @@ public class CreatepostActivity extends AppCompatActivity {
         {
             filePath = data.getData();
             flag = 0;
+            uploadFile();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 imageView.setImageBitmap(bitmap);
@@ -148,11 +143,58 @@ public class CreatepostActivity extends AppCompatActivity {
         if(requestCode == PICK_FILE_REQUEST && resultCode == RESULT_OK && data!=null && data.getData()!=null){
             flag = 1;
             filePath = data.getData();
+            String path = filePath.toString();
+            File file = new File(filePath.toString());
+
+            if(path.startsWith("content://")){
+                Cursor cursor = null;
+                try{
+                    cursor = context.getContentResolver().query(filePath,null,null,null,null);
+                    if(cursor!=null && cursor.moveToFirst()){
+                       fileName= cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                    }
+                }finally {
+                    cursor.close();
+                }
+            }else if(fileName.startsWith("file://")){
+                fileName = file.getName();
+            }
+
+            fileList.setText(fileName);
+            uploadFile();
 
         }
     }
 
-    private void uploadImage() {
+    private void uploadPost(){
+        String userText = text.getText().toString();
+
+        String userId = sharedPreferences.getString("userId","");
+        String username = sharedPreferences.getString("username","");
+        String dept  = sharedPreferences.getString("department","");
+        long time= System.currentTimeMillis();
+
+                                /*Getting firebase Database configuration*/
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+                                    /*User Reference*/
+        DatabaseReference ref = database.getReference("/posts");
+
+        DatabaseReference newPostRef = ref.push();
+
+        String post_id = newPostRef.getKey();
+        /*Uploading the Post Data to the Database*/
+        Post post = new Post(post_id,userId,time,userText,image_url,file_url,username,dept,group_id);
+        newPostRef.setValue(post);
+
+
+        /*Coming back to Dashboard*/
+        Intent intent= new Intent(CreatepostActivity.this,MainActivity.class);
+        startActivity(intent);
+        finish();
+
+    }
+    private void uploadFile() {
 
         if(filePath != null) {
             final ProgressDialog progressDialog;
@@ -175,8 +217,13 @@ public class CreatepostActivity extends AppCompatActivity {
                             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                 progressDialog.dismiss();
 
-                                downloadUrl = taskSnapshot.getDownloadUrl();
+                                downloadUrl = taskSnapshot.getMetadata().getDownloadUrl();
 
+                                if(flag==0){
+                                    image_url = downloadUrl.toString();
+                                }else{
+                                    file_url = downloadUrl.toString();
+                                }
                                 Toast.makeText(CreatepostActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
                             }
                         })

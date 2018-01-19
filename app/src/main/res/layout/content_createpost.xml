@@ -185,6 +185,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/activity_vertical_margin"
+                    android:id="@+id/fileList"
                     android:text="No Files have been set Yet.."/>
 
             </LinearLayout>

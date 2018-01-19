@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "510330347035-nee7lb19a2ps7iirdhhgsi9tea4ekk35.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sahil.digitalclassroom",
+            "certificate_hash": "1e91d3074fcd331e80e11437aed4a7aed170aeb6"
+          }
+        },
+        {
           "client_id": "510330347035-p9acoblovvm0g3r6rrqog176i62qn9c4.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

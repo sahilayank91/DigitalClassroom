@@ -1,14 +1,18 @@
 package com.example.sahil.digitalclassroom.adapter;
 
-import android.graphics.Movie;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.sahil.digitalclassroom.R;
 import com.example.sahil.digitalclassroom.model.Group;
+import com.example.sahil.digitalclassroom.ui.DashBoardActivity;
+import com.example.sahil.digitalclassroom.ui.MainActivity;
 
 import java.util.List;
 
@@ -19,19 +23,23 @@ import java.util.List;
 public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.MyViewHolder> {
 
     private List<Group> groupList;
+    Context context;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title, year, genre;
+        public RelativeLayout group_tile;
 
         public MyViewHolder(View view) {
             super(view);
-            title = (TextView) view.findViewById(R.id.title);
-            genre = (TextView) view.findViewById(R.id.genre);
-            year = (TextView) view.findViewById(R.id.year);
+
+            title = (TextView) view.findViewById(R.id.tile_title);
+            group_tile = (RelativeLayout) view.findViewById(R.id.group_tile);
         }
     }
 
-    public GroupAdapter(List<Group> groupList) {
+    public GroupAdapter(List<Group> groupList, Context context)
+    {
+        this.context = context;
         this.groupList = groupList;
     }
 
@@ -45,10 +53,18 @@ public class GroupAdapter extends RecyclerView.Adapter<GroupAdapter.MyViewHolder
 
     @Override
     public void onBindViewHolder(MyViewHolder holder, int position) {
-        Group group = groupList.get(position);
-        holder.title.setText(group.getTitle());
-        holder.genre.setText(group.getGenre());
-        holder.year.setText(group.getYear());
+        final Group group = groupList.get(position);
+        holder.title.setText(group.getName());
+        holder.group_tile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, DashBoardActivity.class);
+                intent.putExtra("group_id",group.getGroup_id());
+                context.startActivity(intent);
+            }
+        });
+
+
     }
 
     @Override

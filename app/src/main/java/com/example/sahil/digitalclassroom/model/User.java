@@ -11,7 +11,32 @@ import java.util.HashMap;
 public class User {
 
 	private String _id;
-	private String name,email,password,college_id,phone,department;
+	private String name;
+	private String email;
+	private String password;
+	private String college_id;
+	private String phone;
+	private String department;
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    private String year;
+
+	public String getUser_auth_id() {
+		return user_auth_id;
+	}
+
+	public void setUser_auth_id(String user_auth_id) {
+		this.user_auth_id = user_auth_id;
+	}
+
+	private String user_auth_id;
 
     public int getRole() {
         return role;
@@ -108,6 +133,8 @@ public class User {
 	}
 
 	/*Sending data to the database*/
+
+
 	public User(String email, String name, String password,String phone,String department,String _id,String college_id,String profile_url, int role){
 		this.email = email;
 		this._id = _id;
@@ -120,6 +147,19 @@ public class User {
 		this.profile_url = profile_url;
 
 	}
+    public User(String email, String name, String password,String phone,String department,String _id,String college_id, int role, String user_auth_id,String profile_url){
+        this.email = email;
+        this._id = _id;
+        this.role = role;
+        this.name = name;
+        this.password = password;
+        this.phone = phone;
+        this.department = department;
+        this.college_id = college_id;
+        this.profile_url = profile_url;
+        this.user_auth_id = user_auth_id;
+
+    }
     public User(String email, String name, String password,String phone,String department,String _id,String college_id){
         this.email = email;
         this._id = _id;
@@ -143,6 +183,18 @@ public class User {
 
 
     }
+    public User(String email, String name, String password,String phone,String department,String _id,String college_id, int role, String user_auth_id){
+        this.email = email;
+        this._id = _id;
+        this.name = name;
+        this.password = password;
+        this.phone = phone;
+        this.department = department;
+        this.college_id = college_id;
+        this.role = role;
+        this.user_auth_id  = user_auth_id;
+
+    }
 	@Override
 	public boolean equals(Object obj) {
 		User user=(User)obj;
@@ -150,5 +202,6 @@ public class User {
 			return true;
 		else return false;
 	}
+
 
 }
