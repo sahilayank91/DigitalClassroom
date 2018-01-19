@@ -2,6 +2,7 @@ package com.example.sahil.digitalclassroom.ui;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -12,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.Toast;
 
 import com.example.sahil.digitalclassroom.R;
 import com.example.sahil.digitalclassroom.adapter.AnalyseAttendanceAdapter;
@@ -23,6 +25,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -58,7 +61,7 @@ public class AnalyseAttendance extends AppCompatActivity implements DatePickerDi
                 datePicker.show(getSupportFragmentManager(), "date picker");
             }
         });
-        role = 1;
+        role = 0;
 
 //        Group_id = getIntent().getStringExtra("group_id");
 //        User_id = getIntent().getStringExtra("teacher_id");
@@ -75,6 +78,12 @@ public class AnalyseAttendance extends AppCompatActivity implements DatePickerDi
         else{
             MembersOfGroup = PopulateSample();
         }
+
+        if (role == 1) {
+            ExecuteFirebase();
+        }
+        else{
+            ExecuteFirebaseStudent();}
 
         present_array = new boolean[MembersOfGroup.size()];
         recyclerView = (RecyclerView) findViewById(R.id.list_analyse_attendance);
@@ -111,12 +120,37 @@ public class AnalyseAttendance extends AppCompatActivity implements DatePickerDi
 
 //Fucntion to query data from firebase
     public void ExecuteFirebase(){
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Fetching Data");
+        progressDialog.setMessage("Please Wait");
+        progressDialog.show();
+
+        listOfatt = new ArrayList<>();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         Query query = reference.child("attendance").orderByChild("groupid_date").equalTo(Group_id+"_"+DateData);
+        final int[] flag = {0};
+        //This code is to determine whether the Data is present in the table or not
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getChildrenCount() == 0){
+                    progressDialog.dismiss();
+                    flag[0] = 1;
+                    Toast.makeText(getApplicationContext(),"DatanotAvailable",Toast.LENGTH_SHORT);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        if (flag[0] ==0){
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 Attendance attendance = dataSnapshot.getValue(Attendance.class);
+                progressDialog.dismiss();
                 if (attendance != null ) {
                     listOfatt.add(attendance);
                     refreshRecyclerView();
@@ -143,7 +177,7 @@ public class AnalyseAttendance extends AppCompatActivity implements DatePickerDi
             public void onCancelled(DatabaseError firebaseError) {
 
             }
-        });
+        });}
     }
 
     @Override
@@ -152,6 +186,7 @@ public class AnalyseAttendance extends AppCompatActivity implements DatePickerDi
         calendar.set(Calendar.YEAR, year);
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+
         DateButton.setText("Date : " + DateFormat.getDateInstance(SimpleDateFormat.MEDIUM).format(calendar.getTime()));
         SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
         DateData = df.format(calendar.getTime());
@@ -163,11 +198,34 @@ public class AnalyseAttendance extends AppCompatActivity implements DatePickerDi
     }
 
     private void ExecuteFirebaseStudent() {
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("Fetching Data");
+        progressDialog.setMessage("Please Wait");
+        progressDialog.show();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         Query query = reference.child("attendance").orderByChild("groupid_date").equalTo(Group_id+"_"+DateData);
+        final int[] flag = {0};
+        //This code is to determine whether the Data is present in the table or not
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getChildrenCount() == 0){
+                    progressDialog.dismiss();
+                    flag[0] = 1;
+                    Toast.makeText(getApplicationContext(),"DatanotAvailable",Toast.LENGTH_SHORT);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        if (flag[0] ==0){
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                progressDialog.dismiss();
                 Attendance attendance = dataSnapshot.getValue(Attendance.class);
                 User x;
                 x = MembersOfGroup.get(0);
@@ -196,7 +254,7 @@ public class AnalyseAttendance extends AppCompatActivity implements DatePickerDi
             public void onCancelled(DatabaseError firebaseError) {
 
             }
-        });
+        });}
     }
 
     //Two fragment of date picker for picking date 
