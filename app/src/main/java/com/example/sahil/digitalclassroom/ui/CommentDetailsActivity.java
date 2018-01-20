@@ -2,17 +2,15 @@ package com.example.sahil.digitalclassroom.ui;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.example.sahil.digitalclassroom.R;
 import com.example.sahil.digitalclassroom.adapter.CommentsAdapter;
-import com.example.sahil.digitalclassroom.adapter.GroupAdapter;
 import com.example.sahil.digitalclassroom.model.Comment;
-import com.example.sahil.digitalclassroom.model.Group;
 
 import java.util.ArrayList;
 import java.util.List;

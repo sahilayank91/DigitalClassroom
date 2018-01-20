@@ -8,13 +8,11 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.example.sahil.digitalclassroom.R;
 import com.example.sahil.digitalclassroom.model.User;
-import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 
 
@@ -61,9 +59,9 @@ public class TakeAttendanceAdapter extends RecyclerView.Adapter<TakeAttendanceAd
         User user = Members_of_group.get(position);
         holder.StudentName.setText(user.getName());
         holder.StudentId.setText(user.getCollege_id());
-        Picasso.with(holder.StudentImage.getContext())
-                .load(user.getPathImage())//Set the path of the image
-                .into(holder.StudentImage);
+//        Picasso.with(holder.StudentImage.getContext())
+//                .load(user.getPathImage())//Set the path of the image
+//                .into(holder.StudentImage);
 //To set the click listener on the list
         holder.Ispresent.setOnClickListener(new View.OnClickListener() {
             @Override

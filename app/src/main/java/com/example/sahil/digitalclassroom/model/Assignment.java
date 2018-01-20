@@ -24,7 +24,7 @@ public class Assignment {
         assign.put("assign_id",this.assign_id);
         assign.put("made_by",this.made_by);
         assign.put("text",text);
-        //TODO add array list path
+
         return assign;
     }
 }

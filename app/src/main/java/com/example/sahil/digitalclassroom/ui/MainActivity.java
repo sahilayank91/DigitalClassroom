@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import com.example.sahil.digitalclassroom.R;
 import com.example.sahil.digitalclassroom.adapter.GroupAdapter;
 import com.example.sahil.digitalclassroom.model.Group;
@@ -35,6 +36,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -57,6 +59,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        startActivity(new Intent(this,StudentAttedancePercentage.class));
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.app_name);
@@ -99,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 /*Check if the group id is present or not*/
         String userid = sharedPreferences.getString("userId",null);
 
-        Log.e("userId in prepare: ",userid);
+        Log.e("userId in prepare: ",userid+" ");
         Query query = ref.orderByChild("user_id").equalTo(userid);
         query.addChildEventListener(new ChildEventListener() {
             @Override

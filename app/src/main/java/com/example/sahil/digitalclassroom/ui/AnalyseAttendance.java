@@ -3,6 +3,8 @@ package com.example.sahil.digitalclassroom.ui;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -10,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -19,6 +22,7 @@ import com.example.sahil.digitalclassroom.R;
 import com.example.sahil.digitalclassroom.adapter.AnalyseAttendanceAdapter;
 import com.example.sahil.digitalclassroom.model.Attendance;
 import com.example.sahil.digitalclassroom.model.User;
+import com.example.sahil.digitalclassroom.model.User_Group;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -34,6 +38,7 @@ import java.util.Calendar;
 
 public class AnalyseAttendance extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
+    public static final String MyPREFERENCES = "MyPrefs" ;
     private Button DateButton;
     public String DateData;
     private ArrayList<Attendance> listOfatt;
@@ -44,6 +49,7 @@ public class AnalyseAttendance extends AppCompatActivity implements DatePickerDi
     boolean[] present_array;
     private int role;//0 for student and 1 for teacher
     private String User_id,Group_id;
+    private SharedPreferences sharedPreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +60,11 @@ public class AnalyseAttendance extends AppCompatActivity implements DatePickerDi
         Calendar c = Calendar.getInstance();
         DateButton.setText("Date : " + DateFormat.getDateInstance(SimpleDateFormat.MEDIUM).format(c.getTime()));
 
+        sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        Group_id = getIntent().getStringExtra("group_id");
+        User_id = sharedPreferences.getString("userId","");
+        role = sharedPreferences.getInt("role",0);
+
         DateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -61,31 +72,24 @@ public class AnalyseAttendance extends AppCompatActivity implements DatePickerDi
                 datePicker.show(getSupportFragmentManager(), "date picker");
             }
         });
-        role = 0;
 
 //        Group_id = getIntent().getStringExtra("group_id");
 //        User_id = getIntent().getStringExtra("teacher_id");
-        Group_id = "-L34ztQ9YP2avt0NyxDU";
+//        Group_id = "-L34ztQ9YP2avt0NyxDU";
 
         //Below things are based on teacher role now
         listOfatt = new ArrayList<>();
         //Get member list
         if (role==0) {
-            MembersOfGroup = new ArrayList<>();//This will only contain one user in case of student
-            User user = new User("hello@gmail.com", "hel1", "00", "ph", "otp", "department", "id2", "collegeid", 2, "helo");
-            MembersOfGroup.add(user);
+            MembersOfGroup = new ArrayList<>();
+            present_array = new boolean[1];
+            getuser();
         }
         else{
-            MembersOfGroup = PopulateSample();
+            MembersOfGroup = new ArrayList<>();
+            findAllMembersinGroup();
         }
 
-        if (role == 1) {
-            ExecuteFirebase();
-        }
-        else{
-            ExecuteFirebaseStudent();}
-
-        present_array = new boolean[MembersOfGroup.size()];
         recyclerView = (RecyclerView) findViewById(R.id.list_analyse_attendance);
         mLayoutManager = new LinearLayoutManager(getApplicationContext());
         mAdapter = new AnalyseAttendanceAdapter(MembersOfGroup, present_array);//Provide Members List
@@ -94,12 +98,95 @@ public class AnalyseAttendance extends AppCompatActivity implements DatePickerDi
         recyclerView.setAdapter(mAdapter);
     }
 
+    public void findAllMembersinGroup(){
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
+        Query query = reference.child("user_group").orderByChild("group_id").equalTo(Group_id);
+        final int[] flag = {0};
+        //This code is to determine whether the Data is present in the table or not
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getChildrenCount() == 0) {
+                    Toast.makeText(AnalyseAttendance.this,"Please add members in the group, Share the group code with students",Toast.LENGTH_LONG).show();
+                    flag[0] = 1;
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+        if (flag[0] == 0) {
+            query.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    User_Group user_group = dataSnapshot.getValue(User_Group.class);
+                    Log.e("user_group",user_group.getUser_id());
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+                    Query q = ref.child("users/"+user_group.getUser_id());
+                    q.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            Log.e("User ", dataSnapshot.toString());
+                            User user = dataSnapshot.getValue(User.class);
+                            if (user!=null) {
+                                Log.e("User ", user.get_id());
+                                MembersOfGroup.add(user);
+                                present_array = new boolean[MembersOfGroup.size()];
+                            }
+                        }
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
+
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError firebaseError) {
+
+                }
+            });
+        }
+    }
+
+    private void getuser(){
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        Query q = ref.child("users/"+User_id);
+        q.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.e("User ", dataSnapshot.toString());
+                User user = dataSnapshot.getValue(User.class);
+                if (user!=null) {
+                    Log.e("User ", user.get_id());
+                    MembersOfGroup.add(user);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
+    }
+
     public ArrayList<User> PopulateSample() {
         ArrayList<User> Members = new ArrayList<>();
-        User user = new User("hello@gmail.com", "hel1", "00", "ph", "otp", "department", "id1", "collegeid", 2, "helo");
-        Members.add(user);
-        user = new User("2nd user @gmail.com", "hel2", "00", "ph", "otp", "department", "id2", "collegeid", 2, "helo");
-        Members.add(user);
         return Members;
     }
 

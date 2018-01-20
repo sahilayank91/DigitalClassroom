@@ -1,7 +1,6 @@
 package com.example.sahil.digitalclassroom.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -10,15 +9,11 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.sahil.digitalclassroom.R;
 import com.example.sahil.digitalclassroom.model.Comment;
-import com.example.sahil.digitalclassroom.model.Group;
-import com.example.sahil.digitalclassroom.ui.DashBoardActivity;
-import com.example.sahil.digitalclassroom.ui.MainActivity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 

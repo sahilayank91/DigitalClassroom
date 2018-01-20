@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.example.sahil.digitalclassroom.R;
 import com.example.sahil.digitalclassroom.model.User;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -52,9 +51,9 @@ public class AnalyseAttendanceAdapter extends RecyclerView.Adapter<AnalyseAttend
         User user = Members_of_group.get(position);
         holder.StudentName.setText(user.getName());
         holder.StudentId.setText(user.getCollege_id());
-        Picasso.with(holder.StudentImage.getContext())
-                .load(user.getPathImage())//Set the path of the image
-                .into(holder.StudentImage);
+//        Picasso.with(holder.StudentImage.getContext())
+//                .load(user.getPathImage())//Set the path of the image
+//                .into(holder.StudentImage);
 
         //For color text in attendance
         if (!present_array[position]){

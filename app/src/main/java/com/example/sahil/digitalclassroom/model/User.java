@@ -1,12 +1,8 @@
 package com.example.sahil.digitalclassroom.model;
 
 
-import android.content.Context;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.HashMap;
 
 public class User {
 
