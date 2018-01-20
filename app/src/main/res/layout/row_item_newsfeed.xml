@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="6dp"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="3dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingTop="16dp">
+
+        <!--1-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="6dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="6dp"
+            android:weightSum="1">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/newsfeed_profile_image"
+                android:layout_width="0dp"
+                android:layout_height="40dp"
+                android:layout_weight="0.15"
+                android:src="@drawable/profile_image_place_holder"
+                android:transitionName="profile_image_transition" />
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_weight="0.78"
+                android:gravity="center_vertical"
+                android:orientation="vertical">
+
+                <!--Author date holder-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!--Author-->
+                    <TextView
+                        android:id="@+id/newsfeed_author_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.5"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="Author"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Body2" />
+
+                    <!--date-->
+                    <TextView
+                        android:id="@+id/newsfeed_date"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="4dp"
+                        android:layout_weight="0.4"
+                        android:gravity="right"
+                        android:text="12/01/2017" />
+
+                    <!--<ImageButton-->
+                    <!--android:id="@+id/newsfeed_edit"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_weight="0.1"-->
+                    <!--android:layout_height="match_parent"-->
+                    <!--android:src="@drawable/ic_edit"-->
+                    <!--android:visibility="gone"-->
+                    <!--android:background="@android:color/white"/>-->
+
+                </LinearLayout>
+
+                <!--Title-->
+                <TextView
+                    android:id="@+id/newsfeed_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:text="Title"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Body1" />
+
+            </LinearLayout>
+
+
+            <ImageView
+                android:id="@+id/newsfeed_overflow_menu"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.07"
+                app:srcCompat="@drawable/ic_overflow_menu_24dp"
+                android:layout_gravity="top"
+                android:layout_marginTop="2dp"
+                android:clickable="true"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:tint="#544d4d"
+                android:layout_marginLeft="4dp"/>
+
+        </LinearLayout>
+
+        <!--2-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="6dp"
+            android:paddingTop="6dp">
+
+            <TextView
+                android:id="@+id/newsfeed_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:paddingBottom="4dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="4dp"
+                android:text="this is news feed" />
+
+            <FrameLayout
+                android:id="@+id/newsfeed_image_holder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp">
+
+                <ImageView
+                    android:id="@+id/newsfeed_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:cropToPadding="false"
+                    android:maxHeight="200dp"
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/splash"
+                    android:transitionName="image_transition" />
+
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <!--&lt;!&ndash;3&ndash;&gt;-->
+        <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="0.05dp"-->
+        <!--android:layout_marginBottom="0dp"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:background="@android:color/darker_gray"></View>-->
+
+        <!--4-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:weightSum="1">
+
+            <TextView
+                android:id="@+id/newsfeed_total_likes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="4dp"
+                android:layout_weight="0.5"
+                android:paddingTop="16dp"
+                android:text=""
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/newsfeed_total_comments"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="0.5"
+                android:gravity="right"
+                android:paddingTop="16dp"
+                android:text="2 comments"
+                android:textSize="13dp" />
+
+        </LinearLayout>
+
+        <!--3-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.03dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/darker_gray"></View>
+
+        <!--5-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+
+
+            <LinearLayout
+                android:id="@+id/news_feed_comment_icon_holder"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:layout_marginLeft="4dp"
+                android:gravity="center"
+                android:paddingBottom="6dp"
+                android:paddingTop="6dp">
+
+                <ImageView
+                    android:id="@+id/newsfeed_comment_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    app:srcCompat="@drawable/ic_comment_black_24dp"
+                    android:tint="@android:color/darker_gray" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="8dp"
+                    android:text="Comment"
+                    android:textSize="13dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/news_feed_share_icon_holder"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+
+                android:gravity="center"
+                android:layout_marginLeft="4dp"
+                android:layout_weight="0.5"
+
+                android:paddingBottom="6dp"
+                android:layout_marginRight="0dp"
+                android:paddingTop="6dp">
+
+                <ImageView
+                    android:id="@+id/newsfeed_share_icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:tint="@android:color/darker_gray"
+                    app:srcCompat="@drawable/ic_share_black_24dp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="8dp"
+                    android:text="Share"
+                    android:textSize="13dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</android.support.v7.widget.CardView>

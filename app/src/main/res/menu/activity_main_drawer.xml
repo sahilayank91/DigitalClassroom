@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nav_share"
+        android:icon="@drawable/ic_menu_share"
+        android:title="Share" />
+    <item
+    android:id="@+id/nav_logout"
+    android:icon="@drawable/ic_like_black_24dp"
+    android:title="LogOut"
+    />
+    <item
+        android:id="@+id/nav_create_group"
+        android:icon="@drawable/ic_add_black_24dp"
+        android:title="Create Group"
+
+        />
+    <item
+        android:id="@+id/nav_create_post"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="Create Post"
+        />
+
+    <item
+        android:id="@+id/nav_attendance"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="Attendance"
+        />
+    <item
+        android:id="@+id/nav_assignment"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="Assignment"
+        />
+</menu>

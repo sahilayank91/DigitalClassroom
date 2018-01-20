@@ -3,7 +3,9 @@ package com.example.sahil.digitalclassroom.ui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -22,6 +24,7 @@ import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
@@ -36,11 +39,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.sahil.digitalclassroom.R;
+import com.example.sahil.digitalclassroom.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -48,11 +59,13 @@ import static android.Manifest.permission.READ_CONTACTS;
  * A login screen that offers login via email/password.
  */
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
-
+    public static final String MyPREFERENCES = "MyPrefs" ;
+    private SharedPreferences sharedPreferences;
     /**
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
+    private User User;
 
     /**
      * A dummy authentication store containing known user names and passwords.
@@ -71,7 +84,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
+    private TextView newUser;
+
     private FirebaseAuth mAuth;
+
+    @Override
+    public void onPanelClosed(int featureId, Menu menu) {
+        super.onPanelClosed(featureId, menu);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +102,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
-
+        newUser = (TextView)findViewById(R.id.newUser);
+        newUser.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this,RegisterActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
 
 
@@ -346,12 +375,73 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d("Login portal:", "signInWithEmail:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
+
+                                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("users");
+                                    Query query = ref.orderByChild("user_auth_id").equalTo(user.getUid());
+
+                                    query.addChildEventListener(new ChildEventListener() {
+                                        @Override
+                                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                                            Log.e("data snapshot: ",dataSnapshot.toString());
+                                            User User = dataSnapshot.getValue(User.class);
+//                                            Log.e("User id: ",User.get_id());
+                                            sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+                                            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                                            editor.putString("user_auth_id",User.getUser_auth_id());
+                                            editor.putString("userId",User.get_id());
+                                            editor.putString("username",User.getName());
+                                            editor.putString("password",mPassword);
+                                            editor.putString("department",User.getDepartment());
+                                            editor.putString("year",User.getYear());
+                                            editor.putInt("role",User.getRole());
+                                            editor.putString("email",User.getEmail());
+                                            editor.putString("profile_url",User.getProfile_url());
+                                            editor.commit();
+                                        }
+
+                                        @Override
+                                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+
+                                        }
+
+                                        @Override
+                                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                                        }
+
+                                        @Override
+                                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                     startActivity(intent);
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w("Login Portal: ", "signInWithEmail:failure", task.getException());
-                                    Toast.makeText(LoginActivity.this, "Authentication failed.",
+                                    Toast.makeText(LoginActivity.this, "Authentication failed." + task.getException(),
                                             Toast.LENGTH_SHORT).show();
 
                                 }
