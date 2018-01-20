@@ -141,23 +141,6 @@ public class CreatepostActivity extends AppCompatActivity {
         if(requestCode == PICK_FILE_REQUEST && resultCode == RESULT_OK && data!=null && data.getData()!=null){
             flag = 1;
             filePath = data.getData();
-            String path = filePath.toString();
-            File file = new File(filePath.toString());
-
-            if(path.startsWith("content://")){
-                Cursor cursor = null;
-                try{
-                    cursor = context.getContentResolver().query(filePath,null,null,null,null);
-                    if(cursor!=null && cursor.moveToFirst()){
-                       fileName= cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
-                    }
-                }finally {
-                    cursor.close();
-                }
-            }else if(fileName.startsWith("file://")){
-                fileName = file.getName();
-            }
-
             fileList.setText(fileName);
             uploadFile();
 

@@ -34,11 +34,11 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.MyView
         public MyViewHolder(View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.newsfeed_title);
-            author = (TextView) view.findViewById(R.id.newsfeed_title);
+            author = (TextView) view.findViewById(R.id.newsfeed_author_name);
             date = (TextView) view.findViewById(R.id.newsfeed_title);
-            description = (TextView) view.findViewById(R.id.newsfeed_title);
-            year = (TextView) view.findViewById(R.id.newsfeed_title);
-            comments = (TextView) view.findViewById(R.id.newsfeed_title);
+            description = (TextView) view.findViewById(R.id.newsfeed_description);
+            year = (TextView) view.findViewById(R.id.newsfeed_date);
+            comments = (TextView) view.findViewById(R.id.newsfeed_total_comments);
             post_image = (ImageView) view.findViewById(R.id.newsfeed_image);
             comment_holder = (LinearLayout)view.findViewById(R.id.news_feed_comment_icon_holder);
             share_holder = (LinearLayout)view.findViewById(R.id.news_feed_share_icon_holder);
@@ -66,6 +66,7 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.MyView
         holder.author.setText(post.getUsername());
         holder.title.setText(post.getDepartment());
         holder.description.setText(post.getText());
+        holder.year.setText(DateUtils.getRelativeTimeSpanString(post.getTime(), new java.util.Date().getTime(), DateUtils.FORMAT_NUMERIC_DATE));
         holder.date.setText(DateUtils.getRelativeTimeSpanString(post.getTime(), new java.util.Date().getTime(), DateUtils.FORMAT_ABBREV_RELATIVE));
         Glide.with(context).load(post.getImage_url()).into(holder.post_image);
         holder.share_holder.setOnClickListener(new View.OnClickListener() {

@@ -84,15 +84,10 @@ public void setText(String text) {
 public Long getTime() {
 	return time;
 }
-public Date getDate() {
-	return new Date(time);
-}
 
 public void setTime(Long time) {
 	this.time = time;
 }
-public void setTime(Date time) {
-this.time = time.getTime();
-}
+
 
 }
