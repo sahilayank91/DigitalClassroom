@@ -58,5 +58,5 @@
     <string name="create_assignment_due_on">Due On</string>
     <string name="create_assignment_marks">Marks</string>
     <string name="no_attached_file">Attach assignment file</string>
-    <string name="old_date_set">Date Selected is Behind Current Date</string>
+    <string name="old_date_set">Incorrect Due Date</string>
 </resources>

@@ -260,7 +260,7 @@ public class AssignmentCreateActivity extends AppCompatActivity implements DateP
                     cancel = true;
                 }
 
-                if(dueDateView.getText() == null)
+                if(dueDateView.getText() == "")
                 {
                     dueDateView.setText(R.string.old_date_set);
                     dueDateView.setTextColor(Color.RED);
@@ -302,13 +302,14 @@ public class AssignmentCreateActivity extends AppCompatActivity implements DateP
 
     public static boolean isBehindCurrentDate(Calendar calendar){
         Calendar now = Calendar.getInstance();
-        now.setTime(new Date(System.currentTimeMillis()));
+        now.setTime(new Date());
+        if(calendar.getTimeInMillis() < now.getTimeInMillis())
 
         if(now.get(Calendar.YEAR) > calendar.get(Calendar.YEAR))
             return true;
         else if(now.get(Calendar.YEAR) == calendar.get(Calendar.YEAR) && now.get(Calendar.MONTH) > calendar.get(Calendar.MONTH))
             return true;
-        else if(now.get(Calendar.YEAR) == calendar.get(Calendar.YEAR) && now.get(Calendar.MONTH) > calendar.get(Calendar.MONTH) && now.get(Calendar.DAY_OF_MONTH) > calendar.get(Calendar.DAY_OF_MONTH))
+        else if(now.get(Calendar.YEAR) == calendar.get(Calendar.YEAR) && now.get(Calendar.MONTH) == calendar.get(Calendar.MONTH) && now.get(Calendar.DAY_OF_MONTH) > calendar.get(Calendar.DAY_OF_MONTH))
             return true;
 
         return false;
@@ -322,6 +323,8 @@ public class AssignmentCreateActivity extends AppCompatActivity implements DateP
 
         if(isBehindCurrentDate(calendar)) {
             dueDateView.setText("");
+            dueDateView.setText(R.string.old_date_set);
+            dueDateView.setTextColor(Color.RED);
         }
         else{
             String date = DateFormat.getDateInstance(SimpleDateFormat.MEDIUM).format(calendar.getTime());
