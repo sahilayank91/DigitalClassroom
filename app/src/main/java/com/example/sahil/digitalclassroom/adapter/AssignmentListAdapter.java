@@ -144,7 +144,6 @@ public class AssignmentListAdapter extends RecyclerView.Adapter<AssignmentListAd
 
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
         Query query = reference.child("assignmentSubmissions").orderByChild("id_studentId").equalTo(assignment.getAssign_id() + "_" + "asasd");
-        Log.d("query", query.toString());
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {

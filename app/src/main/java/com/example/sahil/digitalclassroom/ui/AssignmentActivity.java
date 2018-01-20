@@ -77,17 +77,21 @@ public class AssignmentActivity extends AppCompatActivity {
 
 //        Toolbar toolbar =  (Toolbar) findViewById(R.id.toolbar_assign);
 //        setSupportActionBar(toolbar);
-        //if teacher
         FloatingActionButton button = (FloatingActionButton) findViewById(R.id.floatingActionButtonAssignment);
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //create new assignment activity
-                startActivity(new Intent(AssignmentActivity.this,AssignmentCreateActivity.class));
-            }
-        });
-//        else hide this button
+        int role = 2;
+        if(role==1)
+        {
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //create new assignment activity
+                    startActivity(new Intent(AssignmentActivity.this,AssignmentCreateActivity.class));
+                    }
+            });
+         }
+      else{
+            button.setVisibility(View.GONE);
+        }
 
     }
 
@@ -215,6 +219,8 @@ public class AssignmentActivity extends AppCompatActivity {
                             String assignName = AssignmentList.get(whichWasClicked).getName();
                             AssignmentSubmit assignmentSubmit = new AssignmentSubmit(_id, assign_id,"asasd", assignName, assign_id+"_asasd", downloadUrl, submittedAt, 0.0,false);
                             newAssignmentRef.setValue(assignmentSubmit);
+
+                            mAdapter.notifyDataSetChanged();
 
                         }
                     })
