@@ -2,6 +2,7 @@ package com.example.sahil.digitalclassroom.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -17,12 +18,15 @@ import com.bumptech.glide.Glide;
 import com.example.sahil.digitalclassroom.R;
 import com.example.sahil.digitalclassroom.model.Comment;
 import com.example.sahil.digitalclassroom.model.Group;
+import com.example.sahil.digitalclassroom.model.User;
 import com.example.sahil.digitalclassroom.ui.DashBoardActivity;
 import com.example.sahil.digitalclassroom.ui.MainActivity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
+
+import static com.example.sahil.digitalclassroom.ui.CommentDetailsActivity.MyPREFERENCES;
 
 /**
  * Created by sahil on 1/17/2018.
@@ -32,12 +36,12 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
 
     private List<Comment> commentList;
     Context context;
-
+    public static final String MyPREFERENCES = "MyPrefs" ;
+    private SharedPreferences sharedPreferences;
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView author, time, text;
         public ImageView profile_image;
         public EditText message;
-        public Button send;
 
 
         public MyViewHolder(View view) {
@@ -47,8 +51,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
                 time= (TextView)view.findViewById(R.id.comment_date_time);
                 text =(TextView)view.findViewById(R.id.comment_text);
                 profile_image = (ImageView)view.findViewById(R.id.comment_publisher_image);
-                message = (EditText)view.findViewById(R.id.message_edit_text);
-                send = (Button)view.findViewById(R.id.message_publish_icon);
+
         }
     }
 
@@ -73,29 +76,7 @@ public class CommentsAdapter extends RecyclerView.Adapter<CommentsAdapter.MyView
         holder.time.setText(DateUtils.getRelativeTimeSpanString(comment.getTime(), new java.util.Date().getTime(), DateUtils.FORMAT_ABBREV_RELATIVE));
         holder.text.setText(comment.getText());
         Glide.with(context).load(comment.getProfile_url()).into(holder.profile_image);
-        holder.send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String message = holder.text.getText().toString();
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
 
-                                    /*User Reference*/
-                DatabaseReference ref = database.getReference("/post_comments");
-
-                DatabaseReference newUserRef = ref.push();
-
-
-
-
-
-
-
-
-
-
-
-            }
-        });
     }
 
     @Override

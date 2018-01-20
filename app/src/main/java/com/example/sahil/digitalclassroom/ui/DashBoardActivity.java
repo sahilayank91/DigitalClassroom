@@ -86,7 +86,6 @@ public class DashBoardActivity extends AppCompatActivity {
                 /*Check if the group id is present or not*/
         String userid = sharedPreferences.getString("userId",null);
 
-        Log.e("Group id: ",group_id);
         Query query = ref.orderByChild("group_id").equalTo(group_id);
 
        query.addChildEventListener(new ChildEventListener() {

@@ -46,7 +46,8 @@
             android:name=".ui.DashBoardActivity"
             android:label="@string/title_activity_dash_board"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.CommentDetailsActivity"></activity>
+        <activity android:name=".ui.CommentDetailsActivity" />
+        <activity android:name=".ui.ProfileActivity"></activity>
     </application>
 
 </manifest>

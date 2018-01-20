@@ -20,7 +20,7 @@
         android:layout_above="@+id/linearLayout">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/messages_thread_recycler_view"
+            android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"></android.support.v7.widget.RecyclerView>
