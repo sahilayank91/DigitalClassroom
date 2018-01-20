@@ -6,35 +6,35 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.sahil.digitalclassroom.R;
 import com.example.sahil.digitalclassroom.model.User;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
 
 public class AnalyseAttendanceAdapter extends RecyclerView.Adapter<AnalyseAttendanceAdapter.MyViewHolder>{
-    //make list of user with percentage
+    //make list of user with percentage this is extended user model
     private ArrayList<User> Members_of_group;
+    private boolean[] present_array;
 
-    public AnalyseAttendanceAdapter(ArrayList<User> Members_of_group){
+    public AnalyseAttendanceAdapter(ArrayList<User> Members_of_group,boolean[] present_array){
         this.Members_of_group = Members_of_group;
+        this.present_array =present_array;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView StudentName,StudentId;
         ImageView StudentImage;
-        TextView StudentPercentage;
+        TextView StudentPercentage;//From now it will display the status present or absent
         public MyViewHolder(View view) {
             super(view);
             StudentName = (TextView) view.findViewById(R.id.list_student_name);
             StudentId = (TextView) view.findViewById(R.id.list_student_id);
             StudentImage = (ImageView) view.findViewById(R.id.list_student_avatar);
-            StudentPercentage = (CheckBox) view.findViewById(R.id.text_percentage);
+            StudentPercentage = (TextView) view.findViewById(R.id.text_percentage);
         }
     }
 
@@ -51,16 +51,17 @@ public class AnalyseAttendanceAdapter extends RecyclerView.Adapter<AnalyseAttend
         User user = Members_of_group.get(position);
         holder.StudentName.setText(user.getName());
         holder.StudentId.setText(user.getCollege_id());
-        Picasso.with(holder.StudentImage.getContext())
-                .load(user.getPathImage())//Set the path of the image
-                .into(holder.StudentImage);
+//        Picasso.with(holder.StudentImage.getContext())
+//                .load(user.getPathImage())//Set the path of the image
+//                .into(holder.StudentImage);
 
-//        holder.StudentPercentage.setText(String.valueof(user.percentage)+"%");
         //For color text in attendance
-        if (90<75){
+        if (!present_array[position]){
+            holder.StudentPercentage.setText("Absent");
             holder.StudentPercentage.setTextColor(Color.parseColor("#C62828"));
         }
         else{
+            holder.StudentPercentage.setText("Present");
             holder.StudentPercentage.setTextColor(Color.parseColor("#2E7D32"));
         }
     }

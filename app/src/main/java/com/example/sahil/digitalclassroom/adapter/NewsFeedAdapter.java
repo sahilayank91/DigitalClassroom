@@ -15,7 +15,6 @@ import com.bumptech.glide.Glide;
 import com.example.sahil.digitalclassroom.R;
 import com.example.sahil.digitalclassroom.model.Post;
 import com.example.sahil.digitalclassroom.ui.CommentDetailsActivity;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 

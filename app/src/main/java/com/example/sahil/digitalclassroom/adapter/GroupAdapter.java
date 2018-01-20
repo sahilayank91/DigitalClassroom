@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.example.sahil.digitalclassroom.R;
 import com.example.sahil.digitalclassroom.model.Group;
 import com.example.sahil.digitalclassroom.ui.DashBoardActivity;
-import com.example.sahil.digitalclassroom.ui.MainActivity;
 
 import java.util.List;
 

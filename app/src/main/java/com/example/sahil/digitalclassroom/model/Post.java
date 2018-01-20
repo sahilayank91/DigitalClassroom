@@ -1,14 +1,11 @@
 package com.example.sahil.digitalclassroom.model;
 
 
-import android.net.Uri;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 
 public class Post {

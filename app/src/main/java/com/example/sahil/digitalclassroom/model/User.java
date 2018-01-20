@@ -1,12 +1,8 @@
 package com.example.sahil.digitalclassroom.model;
 
 
-import android.content.Context;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.HashMap;
 
 public class User {
 
@@ -115,6 +111,7 @@ public class User {
 		this.department = department;
 	}
 
+
 	public User(){
 
 	}
@@ -126,7 +123,6 @@ public class User {
 		if (author.has("phone")) this.phone = author.getString("phone");
 		if (author.has("email")) this.email = author.getString("email");
 		if (author.has("college_id")) this.college_id = author.getString("college_id");
-		if (author.has("role")) this.role = author.getInt("role");
 		if (author.has("department")) this.department = author.getString("department");
 		if (author.has("profile_url")) this.department = author.getString("profile_url");
 

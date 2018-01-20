@@ -1,7 +1,6 @@
 package com.example.sahil.digitalclassroom.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class Group {
 

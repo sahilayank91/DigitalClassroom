@@ -62,6 +62,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Intent intent = new Intent(this,TakeAttendance.class);
+        intent.putExtra("group_id","-L34ztQ9YP2avt0NyxDU");
+        startActivity(intent);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.app_name);
@@ -97,8 +100,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 /*Check if the group id is present or not*/
         String userid = sharedPreferences.getString("userId",null);
+        userid = "-L3Gwdsus-eY6pTtV5B_";
 
-        Log.e("userId in prepare: ",userid);
+        Log.e("userId in prepare: ",userid+"");
         Query query = ref.orderByChild("user_id").equalTo(userid);
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {

@@ -41,6 +41,8 @@
         <activity
             android:name=".ui.RegisterActivity"
             android:label="@string/title_activity_register" />
+        <activity android:name=".ui.TakeAttendance" />
+        <activity android:name=".ui.AnalyseAttendance" />
         <activity
             android:name=".ui.CreatepostActivity"
             android:label="@string/title_activity_createpost"
@@ -50,6 +52,8 @@
             android:label="@string/title_activity_dash_board"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.CommentDetailsActivity" />
+        <activity android:name=".ui.StudentAttedancePercentage">
+        </activity>
         <activity android:name=".ui.ProfileActivity"
             android:theme="@style/Theme.Design.NoActionBar">
         </activity>
@@ -66,8 +70,6 @@
             android:name=".ui.AssignmentSubmittedActivity">
         </activity>
 
-        <activity android:name=".ui.TakeAttendance" />
-        <activity android:name=".ui.AnalyseAttendance"></activity>
     </application>
 
 </manifest>
