@@ -2,6 +2,7 @@ package com.example.sahil.digitalclassroom.ui;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.sahil.digitalclassroom.R;
 import com.example.sahil.digitalclassroom.adapter.NewsFeedAdapter;
@@ -24,6 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,9 +55,17 @@ public class DashBoardActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
+                Intent intent = new Intent(DashBoardActivity.this,CreatepostActivity.class);
+                intent.putExtra("group_id",group_id);
+                startActivity(intent);
+                finish();
             }
         });
 
+
+
+        /*Enabling create post button*/
 
 
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -73,7 +84,7 @@ public class DashBoardActivity extends AppCompatActivity {
 
 
 
-    public void preparePostData(){
+    public void preparePostData() {
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Loading Groups");
         progressDialog.setMessage("Loading the Groups..Please wait ");
@@ -84,37 +95,61 @@ public class DashBoardActivity extends AppCompatActivity {
         DatabaseReference ref = database.getReference().child("posts");
 
                 /*Check if the group id is present or not*/
-        String userid = sharedPreferences.getString("userId",null);
+        String userid = sharedPreferences.getString("userId", null);
 
         Query query = ref.orderByChild("group_id").equalTo(group_id);
 
-       query.addChildEventListener(new ChildEventListener() {
-           @Override
-           public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-               Log.e("POST:",dataSnapshot.toString());
-               Post post = dataSnapshot.getValue(Post.class);
-               postList.add(post);
-               mAdapter.notifyDataSetChanged();
-               progressDialog.dismiss();
+        final int[] flag = {0};
 
-           }
-           @Override
-           public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getChildrenCount() == 0) {
+                    progressDialog.dismiss();
+                    Toast.makeText(DashBoardActivity.this, "No Posts have been Created for this Group. Please Click + sign to create a Post.", Toast.LENGTH_LONG).show();
+                    flag[0] = 1;
+                }
+            }
 
-           }
-           @Override
-           public void onChildRemoved(DataSnapshot dataSnapshot) {
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-           }
-           @Override
-           public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+        });
 
-           }
-           @Override
-           public void onCancelled(DatabaseError databaseError) {
 
-           }
-       });
+        if (flag[0] == 0) {
+            query.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    Log.e("POST:", dataSnapshot.toString());
+                    Post post = dataSnapshot.getValue(Post.class);
+                    postList.add(post);
+                    mAdapter.notifyDataSetChanged();
+                    progressDialog.dismiss();
+
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+        }
     }
-
 }

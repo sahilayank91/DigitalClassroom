@@ -119,10 +119,11 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
         mAuth = FirebaseAuth.getInstance();
+        storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
         mPasswordView = (EditText) findViewById(R.id.password);
-        profile_image  = (ImageView)findViewById(R.id.imageView);
+        profile_image  = (ImageView)findViewById(R.id.profile_image);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {

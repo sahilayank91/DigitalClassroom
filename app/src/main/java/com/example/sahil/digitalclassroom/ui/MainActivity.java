@@ -23,6 +23,8 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.example.sahil.digitalclassroom.R;
 import com.example.sahil.digitalclassroom.adapter.GroupAdapter;
 import com.example.sahil.digitalclassroom.model.Group;
@@ -35,6 +37,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -87,6 +91,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     void prepareGroupData(){
 
 
+
+        final int[] flag = {0};
         final ProgressDialog progressDialog = new ProgressDialog(this);
         progressDialog.setTitle("Loading Groups");
         progressDialog.setMessage("Loading the Groups..Please wait ");
@@ -101,65 +107,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Log.e("userId in prepare: ",userid);
         Query query = ref.orderByChild("user_id").equalTo(userid);
-        query.addChildEventListener(new ChildEventListener() {
+
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.e("dta snap: ","The " + dataSnapshot.getKey() + " score is " + dataSnapshot.getValue());
-
-
-                User_Group user_group = dataSnapshot.getValue(User_Group.class);
-                final FirebaseDatabase database = FirebaseDatabase.getInstance();
-
-                /*User Reference*/
-                DatabaseReference ref = database.getReference("/group");
-
-                /*Check if the group id is present or not*/
-                Query query = ref.orderByChild("group_id").equalTo(user_group.getGroup_id());
-
-                query.addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        Group group = dataSnapshot.getValue(Group.class);
-                        groupList.add(group);
-                        mAdapter.notifyDataSetChanged();
-                        progressDialog.dismiss();
-                    }
-
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
-            }
-
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getChildrenCount() == 0){
+                    progressDialog.dismiss();
+                    Toast.makeText(MainActivity.this,"You are not listed in any Group. Please Create/Join group.",Toast.LENGTH_LONG).show();
+                    flag[0] = 1;
+                }
             }
 
             @Override
@@ -171,6 +127,78 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
+
+
+        if(flag[0]== 0) {
+            query.addChildEventListener(new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                    Log.e("dta snap: ", "The " + dataSnapshot.getKey() + " score is " + dataSnapshot.getValue());
+
+
+                    User_Group user_group = dataSnapshot.getValue(User_Group.class);
+                    final FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+                /*User Reference*/
+                    DatabaseReference ref = database.getReference("/group");
+
+                /*Check if the group id is present or not*/
+                    Query query = ref.orderByChild("group_id").equalTo(user_group.getGroup_id());
+
+                    query.addChildEventListener(new ChildEventListener() {
+                        @Override
+                        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                            Group group = dataSnapshot.getValue(Group.class);
+                            groupList.add(group);
+                            mAdapter.notifyDataSetChanged();
+                            progressDialog.dismiss();
+                        }
+
+                        @Override
+                        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                        }
+
+                        @Override
+                        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
+
+        }
     }
 
     public void joinGroup(){
@@ -365,9 +393,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 joinGroup();
             }
         }if(id==R.id.navigation_post){
-            Intent intent = new Intent(MainActivity.this,CreatepostActivity.class);
-            startActivity(intent);
-            finish();
+
         }
         return super.onOptionsItemSelected(item);
     }

@@ -63,6 +63,7 @@ public class CommentDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 pushComment();
+                message.setText("");
             }
         });
     }
