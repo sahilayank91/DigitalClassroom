@@ -34,7 +34,7 @@ public class TakeAttendance extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_take_attendance);
 
-        Members = PopulateSample();//for populating sample data
+        //Members = PopulateSample();//for populating sample data
         submitButton = (Button) findViewById(R.id.submit_attendance);
 
         recyclerView = (RecyclerView) findViewById(R.id.list_attendance);
@@ -53,15 +53,6 @@ public class TakeAttendance extends AppCompatActivity {
                 createAttendance(Members);
             }
         });
-    }
-
-    public ArrayList<User> PopulateSample(){
-        ArrayList<User> Members = new ArrayList<>();
-        User user = new User("hello@gmail.com","hel1","00","ph","otp","department","id1","collegeid",2,"helo");
-        Members.add(user);
-        user = new User("2nd user @gmail.com","hel2","00","ph","otp","department","id2","collegeid",2,"helo");
-        Members.add(user);
-        return Members;
     }
 
     public void createAttendance(ArrayList<User> Members){

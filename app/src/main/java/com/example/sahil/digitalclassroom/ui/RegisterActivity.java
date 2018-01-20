@@ -3,8 +3,13 @@ package com.example.sahil.digitalclassroom.ui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -25,32 +30,43 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import com.example.sahil.digitalclassroom.R;
 import com.example.sahil.digitalclassroom.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
 /**
  * A login screen that offers login via email/password.
  */
-public class RegisterActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class RegisterActivity extends AppCompatActivity implements LoaderCallbacks<Cursor>, AdapterView.OnItemSelectedListener {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -70,16 +86,30 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     private UserLoginTask mAuthTask = null;
 
     // UI references.
+
+    public static final String MyPREFERENCES = "MyPrefs" ;
+    private SharedPreferences sharedPreferences;
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
+    private Uri filePath;
     private EditText mConfirmPasswordView;
-    private EditText mBatchView;
     private EditText mYearView;
     private EditText mDepartmentView;
     private EditText mId;
+    private EditText mPhone;
+    private EditText mName;
+    private Spinner spinner;
+    private String role;
     private FirebaseAuth mAuth;
     private View mProgressView;
     private View mLoginFormView;
+    private ImageView profile_image;
+    private final int PICK_IMAGE_REQUEST = 71;
+    private Uri downloadUrl;
+    private String image_url;
+    private String file_url;
+    FirebaseStorage storage;
+    StorageReference storageReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +119,11 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         populateAutoComplete();
         mAuth = FirebaseAuth.getInstance();
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
         mPasswordView = (EditText) findViewById(R.id.password);
+        profile_image  = (ImageView)findViewById(R.id.profile_image);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -101,11 +135,21 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             }
         });
 
-        mBatchView = (EditText)findViewById(R.id.batch);
+
+        profile_image.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseImage();
+            }
+        });
+
         mYearView = (EditText)findViewById(R.id.year);
         mConfirmPasswordView = (EditText) findViewById(R.id.confirmPassword);
         mDepartmentView = (EditText) findViewById(R.id.department);
         mId = (EditText)findViewById(R.id.collegeid);
+        mPhone = (EditText) findViewById(R.id.phone);
+        mName = (EditText)findViewById(R.id.username);
+
 
 
         Button mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
@@ -119,9 +163,91 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
 
+         spinner = (Spinner) findViewById(R.id.role);
 
+        // Spinner click listener
+        spinner.setOnItemSelectedListener(this);
+
+        // Spinner Drop down elements
+        List<String> categories = new ArrayList<String>();
+        categories.add("Teacher");
+        categories.add("Student");
+
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, categories);
+
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        spinner.setAdapter(dataAdapter);
+    }
+    private void chooseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null) {
+            filePath = data.getData();
+            uploadFile();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                profile_image.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    private void uploadFile() {
+
+        if(filePath != null) {
+            final ProgressDialog progressDialog;
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+            String path = "";
+
+
+                path = "images/" + UUID.randomUUID().toString();
+
+
+            StorageReference ref = storageReference.child(path);
+            ref.putFile(filePath)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            progressDialog.dismiss();
+
+                            downloadUrl = taskSnapshot.getMetadata().getDownloadUrl();
+                            image_url = downloadUrl.toString();
+
+                            Toast.makeText(RegisterActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            Toast.makeText(RegisterActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
+                                    .getTotalByteCount());
+                            progressDialog.setMessage("Uploaded " + (int) progress + "%");
+                        }
+                    });
+
+        }
+    }
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
             return;
@@ -187,7 +313,14 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         String year = mYearView.getText().toString();
         String collegeid = mId.getText().toString();
         String confirm = mConfirmPasswordView.getText().toString();
-
+        String phone = mPhone.getText().toString();
+        String username = mName.getText().toString();
+        Integer myRole;
+        if(role=="Teacher"){
+            myRole = 1;
+        }else{
+            myRole = 0;
+        }
 
         boolean cancel = false;
         View focusView = null;
@@ -223,7 +356,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
-            mAuthTask = new UserLoginTask(email, password,department,year,collegeid);
+            mAuthTask = new UserLoginTask(username,email, password,department,year,collegeid,phone,myRole);
             mAuthTask.execute((Void) null);
         }
     }
@@ -317,6 +450,16 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         mEmailView.setAdapter(adapter);
     }
 
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+       role = parent.getItemAtPosition(position).toString();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+            Toast.makeText(RegisterActivity.this,"Please Select the Role",Toast.LENGTH_SHORT);
+    }
+
 
     private interface ProfileQuery {
         String[] PROJECTION = {
@@ -339,13 +482,19 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         private final String mDepartment;
         private final String mYear;
         private final String mCollegeId;
+        private final String mPhone;
+        private final String mUsername;
+        private final Integer mRole;
 
-        UserLoginTask(String email, String password, String department, String year, String collegeId) {
+        UserLoginTask(String username,String email, String password, String department, String year, String collegeId, String phone,int role) {
             mEmail = email;
             mPassword = password;
             mDepartment = department;
             mYear = year;
             mCollegeId = collegeId;
+            mPhone = phone;
+            mUsername = username;
+            mRole =role;
         }
 
         @Override
@@ -362,13 +511,47 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d("Registration Portal:", "createUserWithEmail:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
+                                    String user_auth_id = user.getUid();
+
+                                    sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+
+
+
+                                    /*Getting firebase Database configuration*/
+                                    FirebaseDatabase database = FirebaseDatabase.getInstance();
+
+                                    /*User Reference*/
+                                    DatabaseReference ref = database.getReference("/users");
+
+                                    DatabaseReference newUserRef = ref.push();
+
+                                    String userId = newUserRef.getKey();
+                                    User userdata = new User(mEmail,mUsername,mPassword,mPhone,mDepartment,userId,mCollegeId,mRole,user_auth_id,image_url);
+
+
+                                    /*Setting the user value in the database*/
+                                    newUserRef.setValue(userdata);
+
+                                    SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                                    editor.putString("user_auth_id",user_auth_id);
+                                    editor.putString("userId",userId);
+                                    editor.putString("username",mUsername);
+                                    editor.putString("password",mPassword);
+                                    editor.putString("department",mDepartment);
+                                    editor.putString("year",mYear);
+                                    editor.putInt("role",mRole);
+                                    editor.putString("email",user.getEmail());
+                                    editor.commit();
+
+
                                     Intent intent = new Intent (RegisterActivity.this, MainActivity.class);
                                     startActivity(intent);
 
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w("Registration Portal:", "createUserWithEmail:failure", task.getException());
-                                    Toast.makeText(RegisterActivity.this, "Authentication failed.",
+                                    Toast.makeText(RegisterActivity.this, "Authentication failed." + task.getException(),
                                             Toast.LENGTH_SHORT).show();
 
                                 }
