@@ -39,8 +39,6 @@ public class ProfileActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         Adapter adapter = new Adapter(getSupportFragmentManager());
         adapter.addFragment(new HomeContentFragment(), "Profile");
-        adapter.addFragment(new  HomeContentFragment(), "Attendance");
-        adapter.addFragment(new  HomeContentFragment(), "Assignment");
         viewPager.setAdapter(adapter);
     }
 

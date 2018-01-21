@@ -395,6 +395,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                             editor.putString("email",User.getEmail());
                                             editor.putString("profile_url",User.getProfile_url());
                                             editor.commit();
+
+
+                                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                            startActivity(intent);
                                         }
 
                                         @Override
@@ -433,8 +437,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
 
 
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                    startActivity(intent);
+
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w("Login Portal: ", "signInWithEmail:failure", task.getException());

@@ -20,14 +20,14 @@ import java.util.ArrayList;
 public class TakeAttendanceAdapter extends RecyclerView.Adapter<TakeAttendanceAdapter.MyViewHolder>{
 
 //    public  List<Boolean> ispresent_array;
-    static public Boolean[] present_array;
+    static public boolean[] present_array;
     private ArrayList<User> Members_of_group;
 
     public TakeAttendanceAdapter(ArrayList<User> Members_of_group){
         this.Members_of_group = Members_of_group;
 //        List<Boolean> list=new ArrayList<Boolean>(Arrays.asList(new Boolean[Members_of_group.size()]));
 //        Collections.fill(list, Boolean.TRUE);
-        present_array = new Boolean[Members_of_group.size()];
+
         for(int i=0;i<Members_of_group.size();i++){
             present_array[i] = false;
         }

@@ -27,6 +27,13 @@ public class HomeContentFragment extends Fragment {
         membersince = (TextView)container.findViewById(R.id.profile_member_since);
 
 
+
+
+
+
+
+
+
         return inflater.inflate(R.layout.activity_home_fragment, null);
     }
 
