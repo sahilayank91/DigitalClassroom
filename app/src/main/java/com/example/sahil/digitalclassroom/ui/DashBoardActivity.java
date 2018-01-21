@@ -202,14 +202,34 @@ public class DashBoardActivity extends AppCompatActivity implements NavigationVi
             Intent intent = new Intent(DashBoardActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();
-        }else if(id == R.id.nav_attendance){
+        }else if(id == R.id.nav_take_attendance){
+            Intent intent = new Intent(DashBoardActivity.this, TakeAttendance.class);
+            intent.putExtra("group_id",group_id);
+            startActivity(intent);
+            finish();
 
+        }else if(id == R.id.nav_analyse_attendance){
+            Intent intent = new Intent (DashBoardActivity.this,AnalyseAttendance.class);
+            intent.putExtra("group_id",group_id);
+            startActivity(intent);
 
-        }else if(id == R.id.nav_assignment){
+        }
+        else if(id == R.id.nav_assignment){
+            Intent intent =new Intent(DashBoardActivity.this,AssignmentActivity.class);
+            intent.putExtra("group_id",group_id);
+
+            startActivity(intent);
+
+        }else if(id == R.id.nav_assignment_create){
+            Intent intent =new Intent(DashBoardActivity.this,AssignmentCreateActivity.class);
+            intent.putExtra("group_id",group_id);
+
+            startActivity(intent);
 
         }else if(id == R.id.nav_profile){
             Intent intent = new Intent(DashBoardActivity.this,ProfileActivity.class);
             startActivity(intent);
+            finish();
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

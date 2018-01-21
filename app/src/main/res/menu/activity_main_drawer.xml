@@ -24,9 +24,24 @@
         android:title="Attendance"
         />
     <item
+        android:id="@+id/nav_take_attendance"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="Take Attendance"
+        />
+    <item
+    android:id="@+id/nav_analyse_attendance"
+    android:icon="@drawable/ic_dashboard_black_24dp"
+    android:title="Analyse Attendance"
+    />
+    <item
         android:id="@+id/nav_assignment"
         android:icon="@drawable/ic_dashboard_black_24dp"
         android:title="Assignment"
+        />
+    <item
+        android:id="@+id/nav_assignment_create"
+        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:title="Create Assignment"
         />
     <item
         android:id="@+id/nav_share"
