@@ -38,7 +38,6 @@ public class NewsFeedAdapter extends RecyclerView.Adapter<NewsFeedAdapter.MyView
             date = (TextView) view.findViewById(R.id.newsfeed_title);
             description = (TextView) view.findViewById(R.id.newsfeed_description);
             year = (TextView) view.findViewById(R.id.newsfeed_date);
-            comments = (TextView) view.findViewById(R.id.newsfeed_total_comments);
             post_image = (ImageView) view.findViewById(R.id.newsfeed_image);
             comment_holder = (LinearLayout)view.findViewById(R.id.news_feed_comment_icon_holder);
             share_holder = (LinearLayout)view.findViewById(R.id.news_feed_share_icon_holder);

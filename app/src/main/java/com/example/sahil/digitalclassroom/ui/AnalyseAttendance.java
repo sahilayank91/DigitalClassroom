@@ -95,7 +95,7 @@ public class AnalyseAttendance extends AppCompatActivity implements DatePickerDi
 
         recyclerView = (RecyclerView) findViewById(R.id.list_analyse_attendance);
         mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        mAdapter = new AnalyseAttendanceAdapter(MembersOfGroup);//Provide Members List
+        mAdapter = new AnalyseAttendanceAdapter(MembersOfGroup,this);//Provide Members List
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);

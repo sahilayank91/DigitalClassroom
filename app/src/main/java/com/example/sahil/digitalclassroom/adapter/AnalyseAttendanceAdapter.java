@@ -1,6 +1,7 @@
 package com.example.sahil.digitalclassroom.adapter;
 
 
+import android.content.Context;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.sahil.digitalclassroom.R;
 import com.example.sahil.digitalclassroom.model.User;
 
@@ -19,11 +21,13 @@ public class AnalyseAttendanceAdapter extends RecyclerView.Adapter<AnalyseAttend
     //make list of user with percentage this is extended user model
     private ArrayList<User> Members_of_group;
     static public boolean[] present_array;
+    private Context context;
 
 
-    public AnalyseAttendanceAdapter(ArrayList<User> Members_of_group){
+    public AnalyseAttendanceAdapter(ArrayList<User> Members_of_group, Context context){
         this.Members_of_group = Members_of_group;
         this.present_array =present_array;
+        this.context = context;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -55,6 +59,8 @@ public class AnalyseAttendanceAdapter extends RecyclerView.Adapter<AnalyseAttend
 //        Picasso.with(holder.StudentImage.getContext())
 //                .load(user.getPathImage())//Set the path of the image
 //                .into(holder.StudentImage);
+
+        Glide.with(context).load(user.getProfile_url()).into(holder.StudentImage);
 
         //For color text in attendance
         if (!present_array[position]){

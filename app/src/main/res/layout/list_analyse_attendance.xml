@@ -28,7 +28,7 @@
 
     <TextView
         android:id="@+id/list_student_name"
-        android:layout_width="170dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/md_keylines"
         android:layout_toRightOf="@+id/list_student_avatar"
@@ -38,7 +38,7 @@
 
     <TextView
         android:id="@+id/list_student_id"
-        android:layout_width="170dp"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/list_student_name"
         android:layout_marginLeft="@dimen/md_keylines"

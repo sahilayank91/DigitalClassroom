@@ -6,12 +6,7 @@
         android:title="Profile"
         />
 
-    <item
-        android:id="@+id/nav_create_group"
-        android:icon="@drawable/ic_add_black_24dp"
-        android:title="Create Group"
 
-        />
     <item
         android:id="@+id/nav_create_post"
         android:icon="@drawable/ic_dashboard_black_24dp"

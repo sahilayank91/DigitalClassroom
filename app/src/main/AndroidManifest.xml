@@ -6,7 +6,7 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <!--To upload files-->
+    <!-- To upload files -->
     <uses-permission android:name="android.permission.READ_INTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
@@ -24,11 +24,6 @@
         <activity
             android:name=".ui.SplashActivity"
             android:theme="@style/Theme.Design.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".ui.Intro_actvity"
@@ -52,24 +47,26 @@
             android:label="@string/title_activity_dash_board"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.CommentDetailsActivity" />
-        <activity android:name=".ui.StudentAttedancePercentage">
-        </activity>
-        <activity android:name=".ui.ProfileActivity"
-            android:theme="@style/Theme.Design.NoActionBar">
-        </activity>
+        <activity android:name=".ui.StudentAttedancePercentage"></activity>
+        <activity
+            android:name=".ui.ProfileActivity"
+            android:theme="@style/Theme.Design.NoActionBar"></activity>
         <activity
             android:name=".ui.AssignmentActivity"
-            android:label="@string/assignment">
-        </activity>
+            android:label="@string/assignment"></activity>
         <activity
             android:name=".ui.AssignmentCreateActivity"
             android:label="@string/create_assignment"
-            android:theme="@style/Theme.Design.Light.NoActionBar">
-        </activity>
-        <activity
-            android:name=".ui.AssignmentSubmittedActivity">
-        </activity>
+            android:theme="@style/Theme.Design.Light.NoActionBar"></activity>
+        <activity android:name=".ui.AssignmentSubmittedActivity"></activity>
+        <activity android:name=".ui.WelcomeActivity"
+            android:theme="@style/Theme.Design.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

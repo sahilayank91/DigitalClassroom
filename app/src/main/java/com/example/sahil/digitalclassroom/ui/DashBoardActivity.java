@@ -94,6 +94,14 @@ public class DashBoardActivity extends AppCompatActivity implements NavigationVi
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        int role = sharedPreferences.getInt("role",0);
+
+        if(role == 0){
+            Menu nav_Menu = navigationView.getMenu();
+            nav_Menu.findItem(R.id.nav_take_attendance).setVisible(false);
+            nav_Menu.findItem(R.id.nav_assignment_create).setVisible(false);
+        }
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -196,6 +204,11 @@ public class DashBoardActivity extends AppCompatActivity implements NavigationVi
         int id = item.getItemId();
 
         if (id == R.id.nav_share) {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT,"Check the new App for the Digital Classroom");
+            sendIntent.setType("text/plain");
+            startActivity(sendIntent);
             //
         } else if (id == R.id.nav_logout) {
             FirebaseAuth.getInstance().signOut();
@@ -228,6 +241,11 @@ public class DashBoardActivity extends AppCompatActivity implements NavigationVi
 
         }else if(id == R.id.nav_profile){
             Intent intent = new Intent(DashBoardActivity.this,ProfileActivity.class);
+            startActivity(intent);
+            finish();
+        }else if (id == R.id.nav_create_post){
+            Intent intent = new Intent(DashBoardActivity.this,CreatepostActivity.class);
+            intent.putExtra("group_id",group_id);
             startActivity(intent);
             finish();
         }

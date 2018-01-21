@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity  {
     public static final String MyPREFERENCES = "MyPrefs" ;
     private SharedPreferences sharedPreferences;
     private TextView mTextMessage;
@@ -86,8 +86,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     void prepareGroupData(){
-
-
 
         final int[] flag = {0};
         final ProgressDialog progressDialog = new ProgressDialog(this);
@@ -396,41 +394,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
 
-        int id = item.getItemId();
-
-        if (id == R.id.nav_share) {
-            //
-        } else if (id == R.id.nav_logout) {
-            FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                startActivity(intent);
-                finish();
-        }else if(id == R.id.nav_create_group){
-            int role = sharedPreferences.getInt("role",0);
-
-            if(role==1){
-                createGroup();
-            }else{
-                joinGroup();
-            }
-
-        }else if(id == R.id.nav_attendance){
-
-
-        }else if(id == R.id.nav_assignment){
-
-        }else if(id == R.id.nav_profile){
-                Intent intent = new Intent(MainActivity.this,ProfileActivity.class);
-                startActivity(intent);
-        }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

@@ -391,6 +391,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                                             editor.putString("password",mPassword);
                                             editor.putString("department",User.getDepartment());
                                             editor.putString("year",User.getYear());
+
                                             editor.putInt("role",User.getRole());
                                             editor.putString("email",User.getEmail());
                                             editor.putString("profile_url",User.getProfile_url());

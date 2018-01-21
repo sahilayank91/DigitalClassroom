@@ -159,38 +159,38 @@
         <!--android:background="@android:color/darker_gray"></View>-->
 
         <!--4-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:weightSum="1">
+        <!--<LinearLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:gravity="center_vertical"-->
+            <!--android:orientation="horizontal"-->
+            <!--android:paddingLeft="16dp"-->
+            <!--android:paddingRight="16dp"-->
+            <!--android:weightSum="1">-->
 
-            <TextView
-                android:id="@+id/newsfeed_total_likes"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="4dp"
-                android:layout_weight="0.5"
-                android:paddingTop="16dp"
-                android:text=""
-                android:textSize="13sp" />
+            <!--<TextView-->
+                <!--android:id="@+id/newsfeed_total_likes"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:layout_marginLeft="4dp"-->
+                <!--android:layout_weight="0.5"-->
+                <!--android:paddingTop="16dp"-->
+                <!--android:text=""-->
+                <!--android:textSize="13sp" />-->
 
-            <TextView
-                android:id="@+id/newsfeed_total_comments"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_weight="0.5"
-                android:gravity="right"
-                android:paddingTop="16dp"
-                android:text="2 comments"
-                android:textSize="13dp" />
+            <!--<TextView-->
+                <!--android:id="@+id/newsfeed_total_comments"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center_vertical"-->
+                <!--android:layout_weight="0.5"-->
+                <!--android:gravity="right"-->
+                <!--android:paddingTop="16dp"-->
+                <!--android:text="2 comments"-->
+                <!--android:textSize="13dp" />-->
 
-        </LinearLayout>
+        <!--</LinearLayout>-->
 
         <!--3-->
         <View
