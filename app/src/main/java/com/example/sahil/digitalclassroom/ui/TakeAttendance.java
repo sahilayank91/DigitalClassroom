@@ -52,10 +52,10 @@ public class TakeAttendance extends AppCompatActivity {
 
         Group_id = getIntent().getStringExtra("group_id");
         sharedPreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
-        Teacher_id = sharedPreferences.getString("userId","");
+        Teacher_id = sharedPreferences.getString("userId","teacher@gmail.com");
         //todo stop student to open this activity
         //todo check if attendance is already submitted
-//        Group_id = "-L35-5etjW88CxX5fQ-J";
+//        Group_id = "-L3H84bWvsWiRw9gVO4k";
 //        Teacher_id = "-L34I6uEd2FljjwWSI5G";
 
         Members = new ArrayList<> ();//for populating sample data
@@ -146,6 +146,8 @@ public class TakeAttendance extends AppCompatActivity {
                             if (user!=null) {
                                 Log.e("User ", user.get_id());
                                 Members.add(user);
+                                present_array = new boolean[Members.size()];
+                                mAdapter.notifyDataSetChanged();
                             }
                         }
                         @Override

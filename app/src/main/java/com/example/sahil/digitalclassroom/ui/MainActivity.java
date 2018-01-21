@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Intent intent = new Intent(this,TakeAttendance.class);
+        Intent intent = new Intent(this,AnalyseAttendance.class);
         intent.putExtra("group_id","-L34ztQ9YP2avt0NyxDU");
         startActivity(intent);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

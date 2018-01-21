@@ -36,6 +36,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import static com.example.sahil.digitalclassroom.adapter.AnalyseAttendanceAdapter.present_array;
+
 public class AnalyseAttendance extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     public static final String MyPREFERENCES = "MyPrefs" ;
@@ -46,7 +48,6 @@ public class AnalyseAttendance extends AppCompatActivity implements DatePickerDi
     private RecyclerView recyclerView;
     private AnalyseAttendanceAdapter mAdapter;
     public RecyclerView.LayoutManager mLayoutManager;
-    boolean[] present_array;
     private int role;//0 for student and 1 for teacher
     private String User_id,Group_id;
     private SharedPreferences sharedPreferences;
@@ -73,6 +74,8 @@ public class AnalyseAttendance extends AppCompatActivity implements DatePickerDi
             }
         });
 
+//        Group_id = "-L3H84bWvsWiRw9gVO4k";
+//        role =1;
 //        Group_id = getIntent().getStringExtra("group_id");
 //        User_id = getIntent().getStringExtra("teacher_id");
 //        Group_id = "-L34ztQ9YP2avt0NyxDU";
@@ -92,7 +95,7 @@ public class AnalyseAttendance extends AppCompatActivity implements DatePickerDi
 
         recyclerView = (RecyclerView) findViewById(R.id.list_analyse_attendance);
         mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        mAdapter = new AnalyseAttendanceAdapter(MembersOfGroup, present_array);//Provide Members List
+        mAdapter = new AnalyseAttendanceAdapter(MembersOfGroup);//Provide Members List
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(mAdapter);
@@ -134,6 +137,7 @@ public class AnalyseAttendance extends AppCompatActivity implements DatePickerDi
                                 Log.e("User ", user.get_id());
                                 MembersOfGroup.add(user);
                                 present_array = new boolean[MembersOfGroup.size()];
+                                mAdapter.notifyDataSetChanged();
                             }
                         }
                         @Override
@@ -172,11 +176,13 @@ public class AnalyseAttendance extends AppCompatActivity implements DatePickerDi
         q.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.e("User ", dataSnapshot.toString());
+                Log.e("User ", dataSnapshot.toString()+"");
                 User user = dataSnapshot.getValue(User.class);
                 if (user!=null) {
                     Log.e("User ", user.get_id());
                     MembersOfGroup.add(user);
+                    present_array = new boolean[MembersOfGroup.size()];
+                    mAdapter.notifyDataSetChanged();
                 }
             }
             @Override
