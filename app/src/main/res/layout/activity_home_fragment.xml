@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.ProfileActivity">
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="20dp">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profile_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="100dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/profile_image_place_holder"
+                        android:transitionName="profile_image_transition" />
+
+                    <TextView
+                        android:id="@+id/profile_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="16dp"
+                        android:gravity="center"
+                        android:text="Sahil Ayank"
+                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+                        android:textColor="@color/colorAccent"
+                        android:transitionName="name_transition"/>
+
+
+
+
+
+
+
+
+
+
+
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/data_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        app:cardElevation="3dp"
+        app:cardCornerRadius="0dp">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!--4-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp">
+
+
+                <!--Email label-->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/common_google_signin_btn_icon_light_normal"
+                    android:drawablePadding="5dp"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="10dp"
+                    android:text="Email"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/background_dark"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.05dp"
+                    android:layout_marginBottom="14dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@android:color/darker_gray"></View>
+
+                <!--Email text-->
+                <TextView
+                    android:id="@+id/profile_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="0dp"
+                    android:paddingTop="0dp"
+                    android:text="sahilayank91@gmail.com"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textColor="#000000"
+                    android:textStyle="normal" />
+
+                <!--Department label-->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_department_black_24dp"
+                    android:drawablePadding="5dp"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="10dp"
+                    android:text="Department"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/background_dark"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.05dp"
+                    android:layout_marginBottom="14dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@android:color/darker_gray"></View>
+
+                <!--Department text-->
+                <TextView
+                    android:id="@+id/profile_department_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="0dp"
+                    android:paddingTop="0dp"
+                    android:text="Computer Science"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textColor="#000000"
+                    android:textStyle="normal" />
+
+                <!--Member since label-->
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableLeft="@drawable/ic_member_since_black_24dp"
+                    android:drawablePadding="5dp"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="16dp"
+                    android:text="Member Since"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/background_dark"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.05dp"
+                    android:layout_marginBottom="14dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@android:color/darker_gray"></View>
+
+                <!--Membersince text-->
+                <TextView
+                    android:id="@+id/profile_member_since"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="0dp"
+                    android:text="Patanahi"
+                    android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"
+                    android:textColor="#000000"
+                    android:textStyle="normal" />
+
+                <!--&lt;!&ndash;Total groups label&ndash;&gt;-->
+                <!--<TextView-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:drawableLeft="@drawable/ic_department_black_24dp"-->
+                    <!--android:drawablePadding="5dp"-->
+                    <!--android:gravity="center_vertical"-->
+                    <!--android:paddingBottom="5dp"-->
+                    <!--android:paddingTop="16dp"-->
+                    <!--android:text="Total Groups"-->
+                    <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"-->
+                    <!--android:textColor="@android:color/background_dark"-->
+                    <!--android:textStyle="bold" />-->
+
+                <!--<View-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="0.05dp"-->
+                    <!--android:layout_marginBottom="14dp"-->
+                    <!--android:layout_marginTop="6dp"-->
+                    <!--android:background="@android:color/darker_gray"></View>-->
+
+                <!--&lt;!&ndash;total groups text&ndash;&gt;-->
+                <!--<TextView-->
+                    <!--android:id="@+id/profile_summary"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginBottom="16dp"-->
+                    <!--android:paddingLeft="0dp"-->
+                    <!--android:text="First Year"-->
+                    <!--android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"-->
+                    <!--android:textColor="#000000"-->
+                    <!--android:textStyle="normal" />-->
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+                </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>

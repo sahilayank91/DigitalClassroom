@@ -1,22 +1,32 @@
 package com.example.sahil.digitalclassroom.ui;
 
 import android.Manifest;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Color;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
+import android.provider.OpenableColumns;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,24 +42,34 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 
 /**
  * Created by Sumir on 16-01-2018.
  */
 
-public class AssignmentCreateActivity extends AppCompatActivity {
+public class AssignmentCreateActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     private static final int PICKFILE_RESULT_CODE = 1;
     Uri filePath;
-    Uri downloadUrl;
+    String downloadUrl = null;
+    String displayName = null; //of the file selected
 
-    Button dueDateButton;
+    ImageButton dueDateButton;
     Button uploadButton;
     Button submitButton;
-    TextView attachment;
-    TextView name;
-    TextView marks;
+    Button cancelButton;
+
+    TextView attachmentView;
+    EditText nameView;
+    EditText marksView;
+    TextView dueDateView;
+    Calendar calendar = Calendar.getInstance();
 
     //Firebase
     FirebaseStorage storage;
@@ -103,16 +123,36 @@ public class AssignmentCreateActivity extends AppCompatActivity {
         // TODO Auto-generated method stub
         switch(requestCode){
             case PICKFILE_RESULT_CODE:
-                if(resultCode==RESULT_OK){
+                if(resultCode==RESULT_OK) {
                     filePath = data.getData();
-//                    attachment.append(FilePath);
-                    Log.e("data",data.toString());
+                    String strFileName = filePath.toString();
+                    File myFile = new File(strFileName);
+                    displayName = null;
+
+                    if (strFileName.startsWith("content://")) {
+                        Cursor cursor = null;
+                        try {
+                            cursor = this.getContentResolver().query(filePath, null, null, null, null);
+                            if (cursor != null && cursor.moveToFirst()) {
+                                displayName = cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+                            }
+                        } finally {
+                            cursor.close();
+                        }
+                    } else if (strFileName.startsWith("file://")) {
+                        displayName = myFile.getName();
+                    }
+                    if(displayName != null) {
+                        attachmentView.setText(displayName);
+                        attachmentView.setTextColor(Color.BLACK);
+                    }
+
                 }
                 break;
         }
     }
 
-    private void uploadAttachments() {
+    private void uploadAssignment(final String Name, final double Marks) {
 
         if(filePath != null)
         {
@@ -128,14 +168,30 @@ public class AssignmentCreateActivity extends AppCompatActivity {
                             progressDialog.dismiss();
                             Toast.makeText(AssignmentCreateActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
 
-                            downloadUrl = taskSnapshot.getDownloadUrl();
+                            downloadUrl = taskSnapshot.getMetadata().getDownloadUrl().toString();
+
+                            FirebaseDatabase database = FirebaseDatabase.getInstance();
+                            DatabaseReference ref = database.getReference("/assignments");
+
+                            DatabaseReference newAssignmentRef = ref.push();
+                            String assignmentId = newAssignmentRef.getKey();
+
+                            long dueDate = calendar.getTimeInMillis();
+                            long uploadedAt = System.currentTimeMillis();
+
+                            Assignment assignment = new Assignment(assignmentId, Name, downloadUrl,dueDate, uploadedAt, Marks, displayName);
+                            newAssignmentRef.setValue(assignment);
+
+                            startActivity(new Intent(AssignmentCreateActivity.this,AssignmentActivity.class));
+                            finish();
+
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             progressDialog.dismiss();
-                            Toast.makeText(AssignmentCreateActivity.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AssignmentCreateActivity.this, "Upload Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -154,12 +210,17 @@ public class AssignmentCreateActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_assignment_create);
 
-        attachment = (TextView) findViewById(R.id.assignmentCreateAttachmentFiles);
-        dueDateButton = (Button) findViewById(R.id.assignmentDueDate);
+        attachmentView = (TextView) findViewById(R.id.assignmentCreateAttachmentFiles);
+        dueDateView = (TextView) findViewById(R.id.assignmentDueDateText);
+        calendar.setTime(new Date());
+        dueDateView.setText(DateFormat.getDateInstance(SimpleDateFormat.MEDIUM).format(calendar.getTime()));
+
+        dueDateButton = (ImageButton) findViewById(R.id.assignmentDueDateButton);
         dueDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //todo open data picker
+                DialogFragment datePicker = new DatePickerFragment();
+                datePicker.show(getSupportFragmentManager(),"date picker");
             }
         });
 
@@ -169,29 +230,121 @@ public class AssignmentCreateActivity extends AppCompatActivity {
         uploadButton = (Button) findViewById(R.id.assignmentCreateAttachment);
         configureButton();
 
+        cancelButton = (Button) findViewById(R.id.assignmentCreateCancel);
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(AssignmentCreateActivity.this, "Cancelled",
+                        Toast.LENGTH_SHORT).show();
+
+                startActivity(new Intent(AssignmentCreateActivity.this,AssignmentActivity.class));
+                finish();
+            }
+        });
+
         submitButton = (Button) findViewById(R.id.assignmentCreateSubmit);
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                uploadAttachments();
-                name = (TextView) findViewById(R.id.assignmentCreateName);
-                marks = (TextView) findViewById(R.id.assignmentCreateMarks);
+                View focusView = null;
+                boolean cancel = false;
 
-                String Name = name.getText().toString();
-                double Marks = (double) Double.parseDouble(marks.getText().toString());
+                nameView = (EditText) findViewById(R.id.assignmentCreateName);
+                marksView = (EditText) findViewById(R.id.assignmentCreateMarks);
 
-                FirebaseDatabase database = FirebaseDatabase.getInstance();
-                DatabaseReference ref = database.getReference("/assignments");
+                if(displayName == null){
+                    attachmentView.setText(R.string.no_attached_file);
+                    attachmentView.setTextColor(Color.RED);
+                    focusView = attachmentView;
+                    cancel = true;
+                }
 
-                DatabaseReference newAssignmentRef = ref.push();
+                if(dueDateView.getText() == "")
+                {
+                    dueDateView.setText(R.string.old_date_set);
+                    dueDateView.setTextColor(Color.RED);
+                    focusView = dueDateView;
+                    cancel = true;
+                }
 
-                String assignmentId = newAssignmentRef.getKey();
-                Assignment assignment = new Assignment(assignmentId,Name,downloadUrl,Marks);
+                String Name = nameView.getText().toString();
+                // Check if the user entered name of the assignment.
+                if (TextUtils.isEmpty(Name)) {
+                    nameView.setError(getString(R.string.error_field_required));
+                    focusView = nameView;
+                    cancel = true;
+                }
 
-                newAssignmentRef.setValue(assignment);
+
+                String marksString = marksView.getText().toString();
+                double Marks = 0.0;
+                // Check if marks of assignment are entered or not.
+                if (TextUtils.isEmpty(marksString)) {
+                    Marks = 0.0;
+                }
+                else {
+                    Marks = (double) Double.parseDouble(marksString);
+                }
+
+
+                if (cancel) {
+                    // There was an error; don't attempt sending and focus the first form field with an error.
+                    focusView.requestFocus();
+
+                } else {
+                    uploadAssignment(Name,Marks);
+                }
 
             }
         });
     }
+
+    public static boolean isBehindCurrentDate(Calendar calendar){
+        Calendar now = Calendar.getInstance();
+        now.setTime(new Date());
+        if(calendar.getTimeInMillis() < now.getTimeInMillis())
+
+        if(now.get(Calendar.YEAR) > calendar.get(Calendar.YEAR))
+            return true;
+        else if(now.get(Calendar.YEAR) == calendar.get(Calendar.YEAR) && now.get(Calendar.MONTH) > calendar.get(Calendar.MONTH))
+            return true;
+        else if(now.get(Calendar.YEAR) == calendar.get(Calendar.YEAR) && now.get(Calendar.MONTH) == calendar.get(Calendar.MONTH) && now.get(Calendar.DAY_OF_MONTH) > calendar.get(Calendar.DAY_OF_MONTH))
+            return true;
+
+        return false;
+    }
+
+    @Override
+    public void onDateSet(DatePicker datePicker, int year, int month, int dayOfMonth) {
+        calendar.set(Calendar.YEAR,year);
+        calendar.set(Calendar.MONTH,month);
+        calendar.set(Calendar.DAY_OF_MONTH,dayOfMonth);
+
+        if(isBehindCurrentDate(calendar)) {
+            dueDateView.setText("");
+            dueDateView.setText(R.string.old_date_set);
+            dueDateView.setTextColor(Color.RED);
+        }
+        else{
+            String date = DateFormat.getDateInstance(SimpleDateFormat.MEDIUM).format(calendar.getTime());
+            dueDateView.setText(date);
+            dueDateView.setTextColor(Color.BLACK);
+        }
+
+    }
+
+    //Fragment of date picker for picking date
+    public static class DatePickerFragment extends DialogFragment {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        @NonNull
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            return new DatePickerDialog(getActivity(),(DatePickerDialog.OnDateSetListener) getActivity(),year,month,day);
+        }
+    }
+
 }

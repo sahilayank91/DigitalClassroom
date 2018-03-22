@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <!--<android.support.v7.widget.Toolbar-->
@@ -8,20 +10,24 @@
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="wrap_content"-->
         <!--android:title="@string/assignment" />-->
+    <android.support.v7.widget.RecyclerView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/recycler_assignment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <!--<fragment-->
-        <!--android:id="@+id/frag_teacher_list_assign"-->
-        <!--android:name="com.example.sahil.digitalclassroom.ui.AssignListTeacherFragment"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--/>-->
-
+    </android.support.v7.widget.RecyclerView>
+<!--check this for correctness-->
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/floatingActionButtonAssignment"
-        srcCompat="@android:drawable/ic_input_add"
+        android:layout_marginTop="400dp"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/ic_add_white"
+        android:layout_alignParentRight="true"
         android:clickable="true"
-        android:focusable="true"
-        />
-</LinearLayout>
+        android:focusable="true" />
+</RelativeLayout>

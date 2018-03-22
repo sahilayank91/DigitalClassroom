@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -22,7 +22,10 @@
     <ScrollView
         android:id="@+id/login_form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true">
 
         <LinearLayout
             android:id="@+id/email_login_form"
@@ -39,6 +42,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_email"
+                    android:text=""
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:singleLine="true" />
@@ -47,6 +51,7 @@
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:layout_height="wrap_content">
 
                 <EditText
@@ -59,6 +64,7 @@
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
                     android:maxLines="1"
+                    android:text=""
                     android:singleLine="true" />
 
             </android.support.design.widget.TextInputLayout>
@@ -72,6 +78,18 @@
                 android:text="@string/action_sign_in"
                 android:textStyle="bold" />
 
+
+            <TextView
+                android:id="@+id/newUser"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:paddingTop="20dp"
+                android:text="New User ? Sign Up"
+                android:textSize="15dp" />
+
+
         </LinearLayout>
     </ScrollView>
-</LinearLayout>
+</RelativeLayout>

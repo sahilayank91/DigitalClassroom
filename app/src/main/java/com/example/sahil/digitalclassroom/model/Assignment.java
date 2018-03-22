@@ -9,9 +9,11 @@ import java.util.HashMap;
 public class Assignment {
 
     private String assign_id,group_id,made_by,name;
-    private Uri path;
+    private String path;
     private long dueDate;
+    private long uploadedAt;
     private double marks;
+    private String fileName;
 
     public String getAssign_id() {
         return assign_id;
@@ -45,11 +47,11 @@ public class Assignment {
         this.name = name;
     }
 
-    public Uri getPath() {
+    public String getPath() {
         return path;
     }
 
-    public void setPath(Uri path) {
+    public void setPath(String path) {
         this.path = path;
     }
 
@@ -61,6 +63,14 @@ public class Assignment {
         this.dueDate = dueDate;
     }
 
+    public long getUploadedAt() {
+        return uploadedAt;
+    }
+
+    public void setUploadedAt(long uploadedAt) {
+        this.uploadedAt = uploadedAt;
+    }
+
     public double getMarks() {
         return marks;
     }
@@ -69,9 +79,17 @@ public class Assignment {
         this.marks = marks;
     }
 
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
     public Assignment(){
     }
-    public Assignment(String group_id,String assign_id,String made_by,String name,Uri path,long dueDate, double marks){
+    public Assignment(String group_id,String assign_id,String made_by,String name,String path,long dueDate, long uploadedAt, double marks, String fileName){
         this.group_id = group_id;
         this.assign_id = assign_id;
         this.made_by = made_by;
@@ -79,11 +97,16 @@ public class Assignment {
         this.path = path;
         this.dueDate = dueDate;
         this.marks = marks;
+        this.fileName = fileName;
     }
-    public Assignment(String assign_id,String name,Uri path,double marks){
+
+    public Assignment(String assign_id,String name,String path,long dueDate, long uploadedAt,double marks,String fileName){
         this.assign_id = assign_id;
+        this.name = name;
         this.path = path;
         this.dueDate = dueDate;
+        this.uploadedAt = uploadedAt;
         this.marks = marks;
+        this.fileName = fileName;
     }
 }
